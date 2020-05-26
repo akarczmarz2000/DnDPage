@@ -1,3 +1,16 @@
-import os from 'os';
-var MONGO_URI = os.env.MONGO_URI;
-console.log(MONGO_URI);
+import { MongoClient } from 'mongodb';
+async function main() {
+    try {
+        const uri = "mongodb+srv://root:r00tUser@cluster0-zbhfi.mongodb.net/DnDDatabase?retryWrites=true&w=majority";
+        const client = new MongoClient(uri);
+        await client.connect();
+        await listDatabases(client);
+
+    } catch (e) {
+        console.error(e);
+    }
+    finally {
+        await client.close();
+    }
+}
+main().catch(console.error);
