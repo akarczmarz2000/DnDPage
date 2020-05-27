@@ -1,7 +1,9 @@
 import os
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 from flask_pymongo import PyMongo
-
+from os import path
+if path.exists("env.py"):
+  import env 
 
 app = Flask(__name__)
 
@@ -10,29 +12,23 @@ app.config["MONGO_URI"] = os.environ.get("MONGO_URI")
 
 mongo = PyMongo(app)
 
+
 @app.route("/")
 @app.route("/entry")
-def character():
+def entry():
     return render_template("entry.html")
 
 
-@app.route("/username", method=["POST"])
-def username(user):
-    user = request.form["name"]
-    username = mongo.db.characters
-    username.mongo.db.characters.find({"user": user}, function (err, user){
-        if (err) {
-            console.log(err)
-        };
-        if (!user.length){
-            return render_template("new_character.html", 
-            classes=mongo.db.classes.find(), race=mongo.db.race.findOne({"user": user}))
-        }
-        else{
-            return render_template("character.html", char=mongo.db.characters.find("user"))
-        }
-    });
-
+@app.route("/username", methods=["POST"])
+def username():
+    name = request.form["name"].lower()
+    user = mongo.db.characters.find_one({"user": name})
+    print(user)
+    if user == None:
+        return render_template("new_character.html", user=user, race=mongo.db.race.find(), classes=mongo.db.classes.find())
+    else:
+        return render_template("character.html", char=mongo.db.characters.find({'user': name}))
+    
 
 if __name__ == "__main__":
     app.run(host=os.environ.get("IP"),

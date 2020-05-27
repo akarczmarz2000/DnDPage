@@ -15,7 +15,7 @@
 		<label for="charname">Charactter Name:</label><br>
 		<select id="class" name="class">
             <option value="" disabled selected>Choose Class</option>
-            {% for class in class%}
+            {% for class in classes%}
             <option value="{{class.class}}">{{class.class}}</option>
             {% endfor %}
         </select>

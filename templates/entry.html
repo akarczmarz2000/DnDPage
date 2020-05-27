@@ -5,10 +5,10 @@
 {% endblock %}
 {% block content %}
 <div class="row m-1 m-1">
-	<h1 class="text-center">Welcome! - Enter your name please?</h1>
+	<h1 class="text-center">Welcome! - Enter your name please</h1>
 </div>
 <div class="row m-1 m-1">
-	<form name="username" method="post">
+	<form action="{{ url_for('username') }}" name="username" method="post">
 		<label for="name">Name:</label><br>
 		<input type="text" id="name" name="name" value="Name"><br>
 		<button type="submit" name="action">Enter Site!</button>
