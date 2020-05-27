@@ -1,274 +1,279 @@
-<html>
-
-<head>
-	<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet"
-		integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-</head>
-
-<body>
-	{% for chars in char%}
-	<div class="row m-1 m-1">
-		<h1 class="text-center">{{chars.user|capitalize}} - {{chars.character_name}}</h1>
+{% extends "base.html" %}
+{% block title %}{{chars.user|capitalize}} - {{chars.character_name}}{% endblock %}
+{% block head %}
+    {{ super() }}
+{% endblock %}
+{% block content %}
+{% for chars in char%}
+<div class="row m-1 m-1">
+	<h1 class="text-center">{{chars.user|capitalize}} - {{chars.character_name}}</h1>
+</div>
+<div class="row m-1 m-1">
+	<div class="col-xl-3 col-lg-4 col-sm-6 pr-0">
+		<ul class="list-group">
+			<li class="list-group-item">{{chars.class}}</li>
+			<li class="list-group-item">{{chars.subclass}}</li>
+		</ul>
 	</div>
-	<div class="row m-1 m-1">
-		<div class="col-xl-3 col-lg-4 col-sm-6 pr-0">
-			<ul class="list-group">
-				<li class="list-group-item">{{chars.class}}</li>
-				<li class="list-group-item">{{chars.otherworldly_patron}}/{{chars.sorerous_origin}}</li>
-			</ul>
-		</div>
-		<div class="col-xl-1 col-lg-4 col-sm-6 pl-0">
-			<ul class="list-group">
-				<li class="list-group-item text-center">{{chars.level}}</li>
-				<li class="list-group-item text-center">{{chars.warlock_level}}/{{chars.sorcerer_level}}</li>
-			</ul>
-		</div>
-		<div class="col-xl-2 col-lg-4 col-sm-12">
-			<ul class="list-group">
-				<li class="list-group-item text-center">{{chars.gender}}</li>
-				<li class="list-group-item text-center">{{chars.race}}</li>
-			</ul>
-		</div>
-		<div class="col-xl-3 col-lg-4 col-sm-6 pr-0">
-			<ul class="list-group">
-				<li class="list-group-item text-center">Proficiency Bonus:</li>
-				<li class="list-group-item text-center">Hit Points:</li>
-			</ul>
-		</div>
-		<div class="col-xl-1 col-lg-4 col-sm-6 pl-0">
-			<ul class="list-group">
-				<li class="list-group-item text-center">{{chars.proficiency}}</li>
-				<li class="list-group-item text-center">{{chars.hit_points}}</li>
-			</ul>
-		</div>
+	<div class="col-xl-1 col-lg-4 col-sm-6 pl-0">
+		<ul class="list-group">
+			<li class="list-group-item text-center">{{chars.level}}</li>
+			<li class="list-group-item text-center">{{chars.warlock_level}}/{{chars.sorcerer_level}}</li>
+		</ul>
+	</div>
+	<div class="col-xl-2 col-lg-4 col-sm-12">
+		<ul class="list-group">
+			<li class="list-group-item text-center">{{chars.gender}}</li>
+			<li class="list-group-item text-center">{{chars.race}}</li>
+		</ul>
+	</div>
+	<div class="col-xl-3 col-lg-4 col-sm-6 pr-0">
+		<ul class="list-group">
+			<li class="list-group-item text-center">Proficiency Bonus:</li>
+			<li class="list-group-item text-center">Hit Points:</li>
+		</ul>
+	</div>
+	<div class="col-xl-1 col-lg-4 col-sm-6 pl-0">
+		<ul class="list-group">
+			<li class="list-group-item text-center">{{chars.proficiency}}</li>
+			<li class="list-group-item text-center">{{chars.hit_points}}</li>
+		</ul>
+	</div>
+</div>
+<div class="row m-1">
+	<div class="col-xl-2 col-lg-4 col-sm-6 pl-0 pr-0">
+		<ul class="list-group">
+			<li class="list-group-item text-center">Strength</li>
+			<li class="list-group-item text-center">{{chars.strength}}</li>
+		</ul>
+	</div>
+	<div class="col-xl-2 col-lg-4 col-sm-6 pl-0 pr-0">
+		<ul class="list-group">
+			<li class="list-group-item text-center">Dexterity</li>
+			<li class="list-group-item text-center">{{chars.dexterity}}</li>
+		</ul>
+	</div>
+	<div class="col-xl-2 col-lg-4 col-sm-6 pl-0 pr-0">
+		<ul class="list-group">
+			<li class="list-group-item text-center">Constitution</li>
+			<li class="list-group-item text-center">{{chars.constitution}}</li>
+		</ul>
+	</div>
+	<div class="col-xl-2 col-lg-4 col-sm-6 pl-0 pr-0">
+		<ul class="list-group">
+			<li class="list-group-item text-center">Intelligence</li>
+			<li class="list-group-item text-center">{{chars.intelligence}}</li>
+		</ul>
+	</div>
+	<div class="col-xl-2 col-lg-4 col-sm-6 pl-0 pr-0">
+		<ul class="list-group">
+			<li class="list-group-item text-center">Wisdom</li>
+			<li class="list-group-item text-center">{{chars.wisdom}}</li>
+		</ul>
+	</div>
+	<div class="col-xl-2 col-lg-4 col-sm-6 pl-0 pr-0">
+		<ul class="list-group">
+			<li class="list-group-item text-center">Charisma</li>
+			<li class="list-group-item text-center">{{chars.charisma}}</li>
+		</ul>
+	</div>
+</div>
+<div class="row m-1">
+	<div class="col-xl-2 col-lg-4 col-sm-6 pr-0">
+		<ul class="list-group">
+			<li class="list-group-item text-center">Proficiency</li>
+			<li class="list-group-item text-center">{{chars.skill.acrobatics}}</li>
+			<li class="list-group-item text-center">{{chars.skill.animal_handling}}</li>
+			<li class="list-group-item text-center">{{chars.skill.arcana}}</li>
+			<li class="list-group-item text-center">{{chars.skill.athletics}}</li>
+			<li class="list-group-item text-center">{{chars.skill.deception}}</li>
+			<li class="list-group-item text-center">{{chars.skill.history}}</li>
+			<li class="list-group-item text-center">{{chars.skill.insight}}</li>
+			<li class="list-group-item text-center">{{chars.skill.intimidation}}</li>
+			<li class="list-group-item text-center">{{chars.skill.investigation}}</li>
+			<li class="list-group-item text-center">{{chars.skill.medicine}}</li>
+			<li class="list-group-item text-center">{{chars.skill.nature}}</li>
+			<li class="list-group-item text-center">{{chars.skill.perception}}</li>
+			<li class="list-group-item text-center">{{chars.skill.performance}}</li>
+			<li class="list-group-item text-center">{{chars.skill.persuasion}}</li>
+			<li class="list-group-item text-center">{{chars.skill.religion}}</li>
+			<li class="list-group-item text-center">{{chars.skill.slight_of_hand}}</li>
+			<li class="list-group-item text-center">{{chars.skill.stealth}}</li>
+			<li class="list-group-item text-center">{{chars.skill.survival}}</li>
+		</ul>
+	</div>
+	<div class="col-xl-2 col-lg-4 col-sm-6 pl-0">
+		<ul class="list-group">
+			<li class="list-group-item text-center">Skills</li>
+			<li class="list-group-item text-center">Acrobatics</li>
+			<li class="list-group-item text-center">Animal Handling</li>
+			<li class="list-group-item text-center">Arcana</li>
+			<li class="list-group-item text-center">Athletics</li>
+			<li class="list-group-item text-center">Deception</li>
+			<li class="list-group-item text-center">History</li>
+			<li class="list-group-item text-center">Insight</li>
+			<li class="list-group-item text-center">Intimidation</li>
+			<li class="list-group-item text-center">Investigation</li>
+			<li class="list-group-item text-center">Medicine</li>
+			<li class="list-group-item text-center">Nature</li>
+			<li class="list-group-item text-center">Perception</li>
+			<li class="list-group-item text-center">Performance</li>
+			<li class="list-group-item text-center">persuasion</li>
+			<li class="list-group-item text-center">Religion</li>
+			<li class="list-group-item text-center">Slight of Hand</li>
+			<li class="list-group-item text-center">Stealth</li>
+			<li class="list-group-item text-center">Survival</li>
+		</ul>
+	</div>
+	<div class="col-xl-2 col-lg-4 col-sm-6 pl-0">
+		<ul class="list-group">
+			<li class="list-group-item text-center">Modifier</li>
+			<li class="list-group-item text-center">Spell Attack</li>
+			<li class="list-group-item text-center">Save DC</li>
+		</ul>
+	</div>
+	<div class="col-xl-4 pr-0">
+		<h2>Spells</h2>
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th scope="col">Cantrip</th>
+					<th scope="col">1st</th>
+					<th scope="col">2nd</th>
+					<th scope="col">3rd</th>
+					<th scope="col">4th</th>
+					<th scope="col">5th</th>
+					<th scope="col">6th</th>
+					<th scope="col">7th</th>
+					<th scope="col">8th</th>
+					<th scope="col">9th</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>{{chars.spells.cantrip.0}}</td>
+					<td>{{chars.spells.first.0}}</td>
+					<td>{{chars.spells.second.0}}</td>
+					<td>{{chars.spells.third.0}}</td>
+					<td>{{chars.spells.fourth.0}}</td>
+					<td>{{chars.spells.fifth.0}}</td>
+					<td>{{chars.spells.sixth.0}}</td>
+					<td>{{chars.spells.seventh.0}}</td>
+					<td>{{chars.spells.eighth.0}}</td>
+					<td>{{chars.spells.ninth.0}}</td>
+				</tr>
+				<tr>
+					<td>{{chars.spells.cantrip.1}}</td>
+					<td>{{chars.spells.first.1}}</td>
+					<td>{{chars.spells.second.1}}</td>
+					<td>{{chars.spells.third.1}}</td>
+					<td>{{chars.spells.fourth.1}}</td>
+					<td>{{chars.spells.fifth.1}}</td>
+					<td>{{chars.spells.sixth.1}}</td>
+					<td>{{chars.spells.seventh.1}}</td>
+					<td>{{chars.spells.eighth.1}}</td>
+					<td>{{chars.spells.ninth.1}}</td>
+				</tr>
+				<tr>
+					<td>{{chars.spells.cantrip.2}}</td>
+					<td>{{chars.spells.first.2}}</td>
+					<td>{{chars.spells.second.2}}</td>
+					<td>{{chars.spells.third.2}}</td>
+					<td>{{chars.spells.fourth.2}}</td>
+					<td>{{chars.spells.fifth.2}}</td>
+					<td>{{chars.spells.sixth.2}}</td>
+					<td>{{chars.spells.seventh.2}}</td>
+					<td>{{chars.spells.eighth.2}}</td>
+					<td>{{chars.spells.ninth.2}}</td>
+				</tr>
+				<tr>
+					<td>{{chars.spells.cantrip.3}}</td>
+					<td>{{chars.spells.first.3}}</td>
+					<td>{{chars.spells.second.3}}</td>
+					<td>{{chars.spells.third.3}}</td>
+					<td>{{chars.spells.fourth.3}}</td>
+					<td>{{chars.spells.fifth.3}}</td>
+					<td>{{chars.spells.sixth.3}}</td>
+					<td>{{chars.spells.seventh.3}}</td>
+					<td>{{chars.spells.eighth.3}}</td>
+					<td>{{chars.spells.ninth.3}}</td>
+				</tr>
+				<tr>
+					<td>{{chars.spells.cantrip.4}}</td>
+					<td>{{chars.spells.first.4}}</td>
+					<td>{{chars.spells.second.4}}</td>
+					<td>{{chars.spells.third.4}}</td>
+					<td>{{chars.spells.fourth.4}}</td>
+					<td>{{chars.spells.fifth.4}}</td>
+					<td>{{chars.spells.sixth.4}}</td>
+					<td>{{chars.spells.seventh.4}}</td>
+					<td>{{chars.spells.eighth.4}}</td>
+					<td>{{chars.spells.ninth.4}}</td>
+				</tr>
+				<tr>
+					<td>{{chars.spells.cantrip.5}}</td>
+					<td>{{chars.spells.first.5}}</td>
+					<td>{{chars.spells.second.5}}</td>
+					<td>{{chars.spells.third.5}}</td>
+					<td>{{chars.spells.fourth.5}}</td>
+					<td>{{chars.spells.fifth.5}}</td>
+					<td>{{chars.spells.sixth.5}}</td>
+					<td>{{chars.spells.seventh.5}}</td>
+					<td>{{chars.spells.eighth.5}}</td>
+					<td>{{chars.spells.ninth.5}}</td>
+				</tr>
+				<tr>
+					<td>{{chars.spells.cantrip.6}}</td>
+					<td>{{chars.spells.first.6}}</td>
+					<td>{{chars.spells.second.6}}</td>
+					<td>{{chars.spells.third.6}}</td>
+					<td>{{chars.spells.fourth.6}}</td>
+					<td>{{chars.spells.fifth.6}}</td>
+					<td>{{chars.spells.sixth.6}}</td>
+					<td>{{chars.spells.seventh.6}}</td>
+					<td>{{chars.spells.eighth.6}}</td>
+					<td>{{chars.spells.ninth.6}}</td>
+				</tr>
+				<tr>
+					<td>{{chars.spells.cantrip.7}}</td>
+					<td>{{chars.spells.first.7}}</td>
+					<td>{{chars.spells.second.7}}</td>
+					<td>{{chars.spells.third.7}}</td>
+					<td>{{chars.spells.fourth.7}}</td>
+					<td>{{chars.spells.fifth.7}}</td>
+					<td>{{chars.spells.sixth.7}}</td>
+					<td>{{chars.spells.seventh.7}}</td>
+					<td>{{chars.spells.eighth.7}}</td>
+					<td>{{chars.spells.ninth.7}}</td>
+				</tr>
+				<tr>
+					<td>{{chars.spells.cantrip.8}}</td>
+					<td>{{chars.spells.first.8}}</td>
+					<td>{{chars.spells.second.8}}</td>
+					<td>{{chars.spells.third.8}}</td>
+					<td>{{chars.spells.fourth.8}}</td>
+					<td>{{chars.spells.fifth.8}}</td>
+					<td>{{chars.spells.sixth.8}}</td>
+					<td>{{chars.spells.seventh.8}}</td>
+					<td>{{chars.spells.eighth.8}}</td>
+					<td>{{chars.spells.ninth.8}}</td>
+				</tr>
+				<tr>
+					<td>{{chars.spells.cantrip.9}}</td>
+					<td>{{chars.spells.first.9}}</td>
+					<td>{{chars.spells.second.9}}</td>
+					<td>{{chars.spells.third.9}}</td>
+					<td>{{chars.spells.fourth.9}}</td>
+					<td>{{chars.spells.fifth.9}}</td>
+					<td>{{chars.spells.sixth.9}}</td>
+					<td>{{chars.spells.seventh.9}}</td>
+					<td>{{chars.spells.eighth.9}}</td>
+					<td>{{chars.spells.ninth.9}}</td>
+				</tr>
+			</tbody>
+		</table>
 	</div>
 	<div class="row m-1">
-		<div class="col-xl-2 col-lg-4 col-sm-6 pl-0 pr-0">
-			<ul class="list-group">
-				<li class="list-group-item text-center">Strength</li>
-				<li class="list-group-item text-center">{{chars.strength}}</li>
-			</ul>
-		</div>
-		<div class="col-xl-2 col-lg-4 col-sm-6 pl-0 pr-0">
-			<ul class="list-group">
-				<li class="list-group-item text-center">Dexterity</li>
-				<li class="list-group-item text-center">{{chars.dexterity}}</li>
-			</ul>
-		</div>
-		<div class="col-xl-2 col-lg-4 col-sm-6 pl-0 pr-0">
-			<ul class="list-group">
-				<li class="list-group-item text-center">Constitution</li>
-				<li class="list-group-item text-center">{{chars.constitution}}</li>
-			</ul>
-		</div>
-		<div class="col-xl-2 col-lg-4 col-sm-6 pl-0 pr-0">
-			<ul class="list-group">
-				<li class="list-group-item text-center">Intelligence</li>
-				<li class="list-group-item text-center">{{chars.intelligence}}</li>
-			</ul>
-		</div>
-		<div class="col-xl-2 col-lg-4 col-sm-6 pl-0 pr-0">
-			<ul class="list-group">
-				<li class="list-group-item text-center">Wisdom</li>
-				<li class="list-group-item text-center">{{chars.wisdom}}</li>
-			</ul>
-		</div>
-		<div class="col-xl-2 col-lg-4 col-sm-6 pl-0 pr-0">
-			<ul class="list-group">
-				<li class="list-group-item text-center">Charisma</li>
-				<li class="list-group-item text-center">{{chars.charisma}}</li>
-			</ul>
-		</div>
-	</div>
-	<div class="row m-1">
-		<div class="col-xl-2 col-lg-4 col-sm-6 pr-0">
-			<ul class="list-group">
-				<li class="list-group-item text-center">Proficiency</li>
-				<li class="list-group-item text-center">{{chars.skill.acrobatics}}</li>
-				<li class="list-group-item text-center">{{chars.skill.animal_handling}}</li>
-				<li class="list-group-item text-center">{{chars.skill.arcana}}</li>
-				<li class="list-group-item text-center">{{chars.skill.athletics}}</li>
-				<li class="list-group-item text-center">{{chars.skill.deception}}</li>
-				<li class="list-group-item text-center">{{chars.skill.history}}</li>
-				<li class="list-group-item text-center">{{chars.skill.insight}}</li>
-				<li class="list-group-item text-center">{{chars.skill.intimidation}}</li>
-				<li class="list-group-item text-center">{{chars.skill.investigation}}</li>
-				<li class="list-group-item text-center">{{chars.skill.medicine}}</li>
-				<li class="list-group-item text-center">{{chars.skill.nature}}</li>
-				<li class="list-group-item text-center">{{chars.skill.perception}}</li>
-				<li class="list-group-item text-center">{{chars.skill.performance}}</li>
-				<li class="list-group-item text-center">{{chars.skill.persuasion}}</li>
-				<li class="list-group-item text-center">{{chars.skill.religion}}</li>
-				<li class="list-group-item text-center">{{chars.skill.slight_of_hand}}</li>
-				<li class="list-group-item text-center">{{chars.skill.stealth}}</li>
-				<li class="list-group-item text-center">{{chars.skill.survival}}</li>
-			</ul>
-		</div>
-		<div class="col-xl-2 col-lg-4 col-sm-6 pl-0">
-			<ul class="list-group">
-				<li class="list-group-item text-center">Skills</li>
-				<li class="list-group-item text-center">Acrobatics</li>
-				<li class="list-group-item text-center">Animal Handling</li>
-				<li class="list-group-item text-center">Arcana</li>
-				<li class="list-group-item text-center">Athletics</li>
-				<li class="list-group-item text-center">Deception</li>
-				<li class="list-group-item text-center">History</li>
-				<li class="list-group-item text-center">Insight</li>
-				<li class="list-group-item text-center">Intimidation</li>
-				<li class="list-group-item text-center">Investigation</li>
-				<li class="list-group-item text-center">Medicine</li>
-				<li class="list-group-item text-center">Nature</li>
-				<li class="list-group-item text-center">Perception</li>
-				<li class="list-group-item text-center">Performance</li>
-				<li class="list-group-item text-center">persuasion</li>
-				<li class="list-group-item text-center">Religion</li>
-				<li class="list-group-item text-center">Slight of Hand</li>
-				<li class="list-group-item text-center">Stealth</li>
-				<li class="list-group-item text-center">Survival</li>
-			</ul>
-		</div>
-		<div class="col-xl-2 col-lg-4 col-sm-6 pl-0">
-			<ul class="list-group">
-				<li class="list-group-item text-center">Modifier</li>
-                <li class="list-group-item text-center">Spell Attack</li>
-                <li class="list-group-item text-center">Save DC</li>
-			</ul>
-		</div>
-        <div class="col-xl-4 pr-0">
-				<h2>Spells</h2>
-				<table class="table table-bordered">
-					<thead>
-						<tr>
-							<th scope="col">Cantrip</th>
-							<th scope="col">1st</th>
-							<th scope="col">2nd</th>
-							<th scope="col">3rd</th>
-							<th scope="col">4th</th>
-							<th scope="col">5th</th>
-							<th scope="col">6th</th>
-							<th scope="col">7th</th>
-							<th scope="col">8th</th>
-							<th scope="col">9th</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td>{{chars.spells.cantrip.0}}</td>
-							<td>{{chars.spells.first.0}}</td>
-							<td>{{chars.spells.second.0}}</td>
-							<td>{{chars.spells.third.0}}</td>
-							<td>{{chars.spells.fourth.0}}</td>
-							<td>{{chars.spells.fifth.0}}</td>
-							<td>{{chars.spells.sixth.0}}</td>
-							<td>{{chars.spells.seventh.0}}</td>
-							<td>{{chars.spells.eighth.0}}</td>
-							<td>{{chars.spells.ninth.0}}</td>
-						</tr>
-						<tr>
-							<td>{{chars.spells.cantrip.1}}</td>
-							<td>{{chars.spells.first.1}}</td>
-							<td>{{chars.spells.second.1}}</td>
-							<td>{{chars.spells.third.1}}</td>
-							<td>{{chars.spells.fourth.1}}</td>
-							<td>{{chars.spells.fifth.1}}</td>
-							<td>{{chars.spells.sixth.1}}</td>
-							<td>{{chars.spells.seventh.1}}</td>
-							<td>{{chars.spells.eighth.1}}</td>
-							<td>{{chars.spells.ninth.1}}</td>
-						</tr>
-						<tr>
-							<td>{{chars.spells.cantrip.2}}</td>
-							<td>{{chars.spells.first.2}}</td>
-							<td>{{chars.spells.second.2}}</td>
-							<td>{{chars.spells.third.2}}</td>
-							<td>{{chars.spells.fourth.2}}</td>
-							<td>{{chars.spells.fifth.2}}</td>
-							<td>{{chars.spells.sixth.2}}</td>
-							<td>{{chars.spells.seventh.2}}</td>
-							<td>{{chars.spells.eighth.2}}</td>
-							<td>{{chars.spells.ninth.2}}</td>
-						</tr><tr>
-							<td>{{chars.spells.cantrip.3}}</td>
-							<td>{{chars.spells.first.3}}</td>
-							<td>{{chars.spells.second.3}}</td>
-							<td>{{chars.spells.third.3}}</td>
-							<td>{{chars.spells.fourth.3}}</td>
-							<td>{{chars.spells.fifth.3}}</td>
-							<td>{{chars.spells.sixth.3}}</td>
-							<td>{{chars.spells.seventh.3}}</td>
-							<td>{{chars.spells.eighth.3}}</td>
-							<td>{{chars.spells.ninth.3}}</td>
-						</tr><tr>
-							<td>{{chars.spells.cantrip.4}}</td>
-							<td>{{chars.spells.first.4}}</td>
-							<td>{{chars.spells.second.4}}</td>
-							<td>{{chars.spells.third.4}}</td>
-							<td>{{chars.spells.fourth.4}}</td>
-							<td>{{chars.spells.fifth.4}}</td>
-							<td>{{chars.spells.sixth.4}}</td>
-							<td>{{chars.spells.seventh.4}}</td>
-							<td>{{chars.spells.eighth.4}}</td>
-							<td>{{chars.spells.ninth.4}}</td>
-						</tr><tr>
-							<td>{{chars.spells.cantrip.5}}</td>
-							<td>{{chars.spells.first.5}}</td>
-							<td>{{chars.spells.second.5}}</td>
-							<td>{{chars.spells.third.5}}</td>
-							<td>{{chars.spells.fourth.5}}</td>
-							<td>{{chars.spells.fifth.5}}</td>
-							<td>{{chars.spells.sixth.5}}</td>
-							<td>{{chars.spells.seventh.5}}</td>
-							<td>{{chars.spells.eighth.5}}</td>
-							<td>{{chars.spells.ninth.5}}</td>
-						</tr><tr>
-							<td>{{chars.spells.cantrip.6}}</td>
-							<td>{{chars.spells.first.6}}</td>
-							<td>{{chars.spells.second.6}}</td>
-							<td>{{chars.spells.third.6}}</td>
-							<td>{{chars.spells.fourth.6}}</td>
-							<td>{{chars.spells.fifth.6}}</td>
-							<td>{{chars.spells.sixth.6}}</td>
-							<td>{{chars.spells.seventh.6}}</td>
-							<td>{{chars.spells.eighth.6}}</td>
-							<td>{{chars.spells.ninth.6}}</td>
-						</tr><tr>
-							<td>{{chars.spells.cantrip.7}}</td>
-							<td>{{chars.spells.first.7}}</td>
-							<td>{{chars.spells.second.7}}</td>
-							<td>{{chars.spells.third.7}}</td>
-							<td>{{chars.spells.fourth.7}}</td>
-							<td>{{chars.spells.fifth.7}}</td>
-							<td>{{chars.spells.sixth.7}}</td>
-							<td>{{chars.spells.seventh.7}}</td>
-							<td>{{chars.spells.eighth.7}}</td>
-							<td>{{chars.spells.ninth.7}}</td>
-						</tr><tr>
-							<td>{{chars.spells.cantrip.8}}</td>
-							<td>{{chars.spells.first.8}}</td>
-							<td>{{chars.spells.second.8}}</td>
-							<td>{{chars.spells.third.8}}</td>
-							<td>{{chars.spells.fourth.8}}</td>
-							<td>{{chars.spells.fifth.8}}</td>
-							<td>{{chars.spells.sixth.8}}</td>
-							<td>{{chars.spells.seventh.8}}</td>
-							<td>{{chars.spells.eighth.8}}</td>
-							<td>{{chars.spells.ninth.8}}</td>
-						</tr><tr>
-							<td>{{chars.spells.cantrip.9}}</td>
-							<td>{{chars.spells.first.9}}</td>
-							<td>{{chars.spells.second.9}}</td>
-							<td>{{chars.spells.third.9}}</td>
-							<td>{{chars.spells.fourth.9}}</td>
-							<td>{{chars.spells.fifth.9}}</td>
-							<td>{{chars.spells.sixth.9}}</td>
-							<td>{{chars.spells.seventh.9}}</td>
-							<td>{{chars.spells.eighth.9}}</td>
-							<td>{{chars.spells.ninth.9}}</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-		<div class="row m-1">
 		<div class="col-xl-4 pr-0">
 			<table class="table">
 				<tbody>
@@ -314,57 +319,57 @@
 				</tbody>
 			</table>
 		</div>
-		</div>
-		<div class="row m-1">
-			<div class="col-xl-4 pr-0">
-				<table class="table">
-					<tbody>
-						<tr>
-							<th>Race Features</th>
-							<td>{{chars.features.race_features.0}}</td>
-							<td>{{chars.features.race_features.1}}</td>
-							<td>{{chars.features.race_features.2}}</td>
-							<td>{{chars.features.race_features.3}}</td>
-							<td>{{chars.features.race_features.4}}</td>
-							<td>{{chars.features.race_features.5}}</td>
-							<td>{{chars.features.race_features.6}}</td>
-							<td>{{chars.features.race_features.7}}</td>
-							<td>{{chars.features.race_features.8}}</td>
-							<td>{{chars.features.race_features.9}}</td>
-						</tr>
-						<tr>
-							<th>Class Features</th>
-							<td>{{chars.features.class_features.0}}</td>
-							<td>{{chars.features.class_features.1}}</td>
-							<td>{{chars.features.class_features.2}}</td>
-							<td>{{chars.features.class_features.3}}</td>
-							<td>{{chars.features.class_features.4}}</td>
-							<td>{{chars.features.class_features.5}}</td>
-							<td>{{chars.features.class_features.6}}</td>
-							<td>{{chars.features.class_features.7}}</td>
-							<td>{{chars.features.class_features.8}}</td>
-							<td>{{chars.features.class_features.9}}</td>
-						</tr>
-						<tr>
-							<th>Feats</th>
-							<td>{{chars.features.feats.0}}</td>
-							<td>{{chars.features.feats.1}}</td>
-							<td>{{chars.features.feats.2}}</td>
-							<td>{{chars.features.feats.3}}</td>
-							<td>{{chars.features.feats.4}}</td>
-							<td>{{chars.features.feats.5}}</td>
-							<td>{{chars.features.feats.6}}</td>
-							<td>{{chars.features.feats.7}}</td>
-							<td>{{chars.features.feats.8}}</td>
-							<td>{{chars.features.feats.9}}</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
+	</div>
+	<div class="row m-1">
+		<div class="col-xl-4 pr-0">
+			<table class="table">
+				<tbody>
+					<tr>
+						<th>Race Features</th>
+						<td>{{chars.features.race_features.0}}</td>
+						<td>{{chars.features.race_features.1}}</td>
+						<td>{{chars.features.race_features.2}}</td>
+						<td>{{chars.features.race_features.3}}</td>
+						<td>{{chars.features.race_features.4}}</td>
+						<td>{{chars.features.race_features.5}}</td>
+						<td>{{chars.features.race_features.6}}</td>
+						<td>{{chars.features.race_features.7}}</td>
+						<td>{{chars.features.race_features.8}}</td>
+						<td>{{chars.features.race_features.9}}</td>
+					</tr>
+					<tr>
+						<th>Class Features</th>
+						<td>{{chars.features.class_features.0}}</td>
+						<td>{{chars.features.class_features.1}}</td>
+						<td>{{chars.features.class_features.2}}</td>
+						<td>{{chars.features.class_features.3}}</td>
+						<td>{{chars.features.class_features.4}}</td>
+						<td>{{chars.features.class_features.5}}</td>
+						<td>{{chars.features.class_features.6}}</td>
+						<td>{{chars.features.class_features.7}}</td>
+						<td>{{chars.features.class_features.8}}</td>
+						<td>{{chars.features.class_features.9}}</td>
+					</tr>
+					<tr>
+						<th>Feats</th>
+						<td>{{chars.features.feats.0}}</td>
+						<td>{{chars.features.feats.1}}</td>
+						<td>{{chars.features.feats.2}}</td>
+						<td>{{chars.features.feats.3}}</td>
+						<td>{{chars.features.feats.4}}</td>
+						<td>{{chars.features.feats.5}}</td>
+						<td>{{chars.features.feats.6}}</td>
+						<td>{{chars.features.feats.7}}</td>
+						<td>{{chars.features.feats.8}}</td>
+						<td>{{chars.features.feats.9}}</td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
 	</div>
-	{% endfor %}
-</body>
-<script src="https://code.jquery.com/jquery-3.5.1.slim.js" integrity="sha256-DrT5NfxfbHvMHux31Lkhxg42LY6of8TaYyK50jnxRnM=" crossorigin="anonymous"></script>
-<script type="module" src="{{ url_for ('static', filename='math.js' )}}"></script>
-</html>
+</div>
+{% endfor %}
+{% endblock %}
+{% block footer %}
+    {{ super() }}
+{% endblock %}

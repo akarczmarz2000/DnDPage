@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Welcome! - First character{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block content %}
+<div class="row m-1 m-1">
+	<h1 class="text-center">Welcome! - Create your first character!</h1>
+</div>
+<div class="row m-1 m-1">
+	<form>
+		<input type="text" id="username" name="username" value="User Name"><br>
+		<label for="username">Users Name:</label><br>
+		<input type="text" id="charname" name="charname" value="Character Name"><br>
+		<label for="charname">Charactter Name:</label><br>
+		<select id="class" name="class">
+            <option value="" disabled selected>Choose Class</option>
+            {% for class in class%}
+            <option value="{{class.class}}">{{class.class}}</option>
+            {% endfor %}
+        </select>
+		<input type="text" id="level" name="level"><br>
+		<label for="level">Level:</label><br>
+		<input type="text" id="subclass" name="subclass"><br>
+		<label for="subclass">Sub Class:</label><br>
+		<input type="text" id="subclasslvl" name="subclasslvl"><br>
+		<label for="subclasslvl">Sub Class Level:</label><br>
+		<select id="race" name="race">
+            <option value="" disabled selected>Choose Race</option>
+            {% for race in race%}
+            <option value="{{race.race}}">{{race.race}}</option>
+            {% endfor %}
+        </select>
+        <select id="gender" name="gender">
+            <option value="female">Female</option>
+            <option value="male">Male</option>
+            <option value="other">Other</option>
+        </select>
+		<input type="text" id="strength" name="strength"><br>
+		<label for="strength">Strength:</label><br>
+		<input type="text" id="dexterity" name="dexterity"><br>
+		<label for="dexterity">Dexterity:</label><br>
+		<input type="text" id="constitution" name="constitution"><br>
+		<label for="constitution">Constitution:</label><br>
+		<input type="text" id="intelligence" name="intelligence"><br>
+		<label for="intelligence">Intelligence:</label><br>
+		<input type="text" id="wisdom" name="wisdom"><br>
+		<label for="wisdom">Wisdom:</label><br>
+		<input type="text" id="charisma" name="charisma"><br>
+		<label for="charisma">Charisma:</label><br>
+	</form>
+</div>
+{% endblock %}
