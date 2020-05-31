@@ -19,6 +19,17 @@ def entry():
     return render_template("entry.html")
 
 
+@app.route("/user-enter", methods=["POST"])
+def user_enter():
+    name = request.form["name"].lower()
+    user = mongo.db.characters.find_one({"user": name})
+    print(user)
+    if user == None:
+        return render_template("new_character.html", name=name, race=mongo.db.race.find(), classes=mongo.db.classes.find(),  cls=mongo.db.classes.find())
+    else:
+        return render_template("character.html",  name=name, char=mongo.db.characters.find({'user': name},  chara=mongo.db.characters.find({'user': name}))
+
+
 @app.route("/character", methods=["POST"])
 def character():
     user = request.form["username"].lower()
@@ -229,17 +240,6 @@ def character():
     }
     connection = mongo.db.characters.insert_one(character)
     return render_template("character.html",  name=user, char=mongo.db.characters.find({'user': user})) 
-
-
-@app.route("/user-enter", methods=["POST"])
-def user_enter():
-    name = request.form["name"].lower()
-    user = mongo.db.characters.find_one({"user": name})
-    print(user)
-    if user == None:
-        return render_template("new_character.html", name=name, race=mongo.db.race.find(), classes=mongo.db.classes.find(),  cls=mongo.db.classes.find())
-    else:
-        return render_template("character.html",  name=name, char=mongo.db.characters.find({'user': name},  chara=mongo.db.characters.find({'user': name}))
 
 
 if __name__ == "__main__":
