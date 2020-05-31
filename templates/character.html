@@ -1,24 +1,37 @@
 {% extends "base.html" %}
-{% block title %}{{char.user|capitalize}} - {{char.character_name}}{% endblock %}
+{% block title %}{{name|capitalize}} - Character View{% endblock %}
 {% block head %}
-    {{ super() }}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<script src="{{url_for('static', filename='sidenav.js')}}"></script>
 {% endblock %}
 {% block content %}
 {% for chars in char%}
+<div id="mySidenav" class="sidenav">
+  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+  <a class="active" href="#">Characters</a>
+    <ul>
+    </ul>
+  <a href="#">Services</a>
+  <a href="#">Clients</a>
+  <a href="#">Contact</a>
+</div>
+<button class="m-1" onclick="openNav()">Open</button>
+<div id="main">
 <div class="row m-1 m-1">
-	<h1 class="text-center">{{chars.user|capitalize}} - {{chars.character_name}}</h1>
+	<h1 class="m-auto">{{chars.user|capitalize}} - {{chars.character_name|capitalize}}</h1>
 </div>
 <div class="row m-1 m-1">
 	<div class="col-xl-3 col-lg-4 col-sm-6 pr-0">
 		<ul class="list-group">
-			<li class="list-group-item">{{chars.class}}</li>
+			<li class="list-group-item">{{chars.clss}}</li>
 			<li class="list-group-item">{{chars.subclass}}</li>
 		</ul>
 	</div>
 	<div class="col-xl-1 col-lg-4 col-sm-6 pl-0">
 		<ul class="list-group">
 			<li class="list-group-item text-center">{{chars.level}}</li>
-			<li class="list-group-item text-center">{{chars.warlock_level}}/{{chars.sorcerer_level}}</li>
+			<li class="list-group-item text-center">{{chars.subclass_level}}</li>
 		</ul>
 	</div>
 	<div class="col-xl-2 col-lg-4 col-sm-12">
@@ -27,59 +40,222 @@
 			<li class="list-group-item text-center">{{chars.race}}</li>
 		</ul>
 	</div>
-	<div class="col-xl-3 col-lg-4 col-sm-6 pr-0">
+	<div class="col-xl-3 col-lg-4 col-6 pr-0">
 		<ul class="list-group">
 			<li class="list-group-item text-center">Proficiency Bonus:</li>
 			<li class="list-group-item text-center">Hit Points:</li>
 		</ul>
 	</div>
-	<div class="col-xl-1 col-lg-4 col-sm-6 pl-0">
+	<div class="col-xl-1 col-lg-4 col-6 pl-0">
 		<ul class="list-group">
-			<li class="list-group-item text-center">{{chars.proficiency}}</li>
+        {% if chars.level <= 4 %}
+			<li class="list-group-item text-center">+2</li>
+        {% elif chars.level <= 8 and chars.level >= 5 %}
+			<li class="list-group-item text-center">+3</li>
+        {% elif chars.level <= 12 and chars.level >= 9 %}
+			<li class="list-group-item text-center">+4</li>
+        {% elif chars.level <= 16 and chars.level >= 13 %}
+			<li class="list-group-item text-center">+5</li>
+        {% elif chars.level <= 20 and chars.level >= 17 %}
+			<li class="list-group-item text-center">+6</li>
+        {% endif %}
 			<li class="list-group-item text-center">{{chars.hit_points}}</li>
 		</ul>
 	</div>
+    <div class="col-xl-2 col-lg-4 col-sm-12 pr-0">
+		<ul class="list-group">
+			<li class="list-group-item text-center">Initiative</li>
+            {% if chars.dexterity == 3 %}
+                <li class="list-group-item text-center">Modifier: -4</li>
+            {% elif chars.dexterity == 4 or chars.dexterity == 5 %}
+                <li class="list-group-item text-center">Modifier: -3</li>
+            {% elif chars.dexterity == 6 or chars.dexterity == 7 %}
+                <li class="list-group-item text-center">Modifier: -2</li>
+            {% elif chars.dexterity == 8 or chars.dexterity == 9 %}
+                <li class="list-group-item text-center">Modifier: -1</li>
+            {% elif chars.dexterity == 10 or chars.dexterity == 11 %}
+                <li class="list-group-item text-center">Modifier: 0</li>
+            {% elif chars.dexterity == 12 or chars.dexterity == 13 %}
+                <li class="list-group-item text-center">Modifier: +1</li>
+            {% elif chars.dexterity == 14 or chars.dexterity == 15 %}
+                <li class="list-group-item text-center">Modifier: +2</li>
+            {% elif chars.dexterity == 16 or chars.dexterity == 17 %}
+                <li class="list-group-item text-center">Modifier: +3</li>
+            {% elif chars.dexterity == 18 or chars.dexterity == 19 %}
+                <li class="list-group-item text-center">Modifier: +4</li>
+            {% elif chars.dexterity == 20 %}
+                <li class="list-group-item text-center">Modifier: +5</li>
+            {% endif %}
+		</ul>
+	</div>
 </div>
+<h2 class="text-center">Stats</h2>
 <div class="row m-1">
 	<div class="col-xl-2 col-lg-4 col-sm-6 pl-0 pr-0">
 		<ul class="list-group">
 			<li class="list-group-item text-center">Strength</li>
 			<li class="list-group-item text-center">{{chars.strength}}</li>
+            {% if chars.strength == 3 %}
+                <li class="list-group-item text-center">Modifier: -4</li>
+            {% elif chars.strength == 4 or chars.strength == 5 %}
+                <li class="list-group-item text-center">Modifier: -3</li>
+            {% elif chars.strength == 6 or chars.strength == 7 %}
+                <li class="list-group-item text-center">Modifier: -2</li>
+            {% elif chars.strength == 8 or chars.strength == 9 %}
+                <li class="list-group-item text-center">Modifier: -1</li>
+            {% elif chars.strength == 10 or chars.strength == 11 %}
+                <li class="list-group-item text-center">Modifier: 0</li>
+            {% elif chars.strength == 12 or chars.strength == 13 %}
+                <li class="list-group-item text-center">Modifier: +1</li>
+            {% elif chars.strength == 14 or chars.strength == 15 %}
+                <li class="list-group-item text-center">Modifier: +2</li>
+            {% elif chars.strength == 16 or chars.strength == 17 %}
+                <li class="list-group-item text-center">Modifier: +3</li>
+            {% elif chars.strength == 18 or chars.strength == 19 %}
+                <li class="list-group-item text-center">Modifier: +4</li>
+            {% elif chars.strength == 20 %}
+                <li class="list-group-item text-center">Modifier: +5</li>
+            {% endif %}
 		</ul>
 	</div>
 	<div class="col-xl-2 col-lg-4 col-sm-6 pl-0 pr-0">
 		<ul class="list-group">
 			<li class="list-group-item text-center">Dexterity</li>
 			<li class="list-group-item text-center">{{chars.dexterity}}</li>
+            {% if chars.dexterity == 3 %}
+                <li class="list-group-item text-center">Modifier: -4</li>
+            {% elif chars.dexterity == 4 or chars.dexterity == 5 %}
+                <li class="list-group-item text-center">Modifier: -3</li>
+            {% elif chars.dexterity == 6 or chars.dexterity == 7 %}
+                <li class="list-group-item text-center">Modifier: -2</li>
+            {% elif chars.dexterity == 8 or chars.dexterity == 9 %}
+                <li class="list-group-item text-center">Modifier: -1</li>
+            {% elif chars.dexterity == 10 or chars.dexterity == 11 %}
+                <li class="list-group-item text-center">Modifier: 0</li>
+            {% elif chars.dexterity == 12 or chars.dexterity == 13 %}
+                <li class="list-group-item text-center">Modifier: +1</li>
+            {% elif chars.dexterity == 14 or chars.dexterity == 15 %}
+                <li class="list-group-item text-center">Modifier: +2</li>
+            {% elif chars.dexterity == 16 or chars.dexterity == 17 %}
+                <li class="list-group-item text-center">Modifier: +3</li>
+            {% elif chars.dexterity == 18 or chars.dexterity == 19 %}
+                <li class="list-group-item text-center">Modifier: +4</li>
+            {% elif chars.dexterity == 20 %}
+                <li class="list-group-item text-center">Modifier: +5</li>
+            {% endif %}
 		</ul>
 	</div>
 	<div class="col-xl-2 col-lg-4 col-sm-6 pl-0 pr-0">
 		<ul class="list-group">
 			<li class="list-group-item text-center">Constitution</li>
 			<li class="list-group-item text-center">{{chars.constitution}}</li>
+            {% if chars.constitution == 3 %}
+                <li class="list-group-item text-center">Modifier: -4</li>
+            {% elif chars.constitution == 4 or chars.constitution == 5 %}
+                <li class="list-group-item text-center">Modifier: -3</li>
+            {% elif chars.constitution == 6 or chars.constitution == 7 %}
+                <li class="list-group-item text-center">Modifier: -2</li>
+            {% elif chars.constitution == 8 or chars.constitution == 9 %}
+                <li class="list-group-item text-center">Modifier: -1</li>
+            {% elif chars.constitution == 10 or chars.constitution == 11 %}
+                <li class="list-group-item text-center">Modifier: 0</li>
+            {% elif chars.constitution == 12 or chars.constitution == 13 %}
+                <li class="list-group-item text-center">Modifier: +1</li>
+            {% elif chars.constitution == 14 or chars.constitution == 15 %}
+                <li class="list-group-item text-center">Modifier: +2</li>
+            {% elif chars.constitution == 16 or chars.constitution == 17 %}
+                <li class="list-group-item text-center">Modifier: +3</li>
+            {% elif chars.constitution == 18 or chars.constitution == 19 %}
+                <li class="list-group-item text-center">Modifier: +4</li>
+            {% elif chars.constitution == 20 %}
+                <li class="list-group-item text-center">Modifier: +5</li>
+            {% endif %}
 		</ul>
 	</div>
 	<div class="col-xl-2 col-lg-4 col-sm-6 pl-0 pr-0">
 		<ul class="list-group">
 			<li class="list-group-item text-center">Intelligence</li>
 			<li class="list-group-item text-center">{{chars.intelligence}}</li>
+            {% if chars.intelligence == 3 %}
+                <li class="list-group-item text-center">Modifier: -4</li>
+            {% elif chars.intelligence == 4 or chars.intelligence == 5 %}
+                <li class="list-group-item text-center">Modifier: -3</li>
+            {% elif chars.intelligence == 6 or chars.intelligence == 7 %}
+                <li class="list-group-item text-center">Modifier: -2</li>
+            {% elif chars.intelligence == 8 or chars.intelligence == 9 %}
+                <li class="list-group-item text-center">Modifier: -1</li>
+            {% elif chars.intelligence == 10 or chars.intelligence == 11 %}
+                <li class="list-group-item text-center">Modifier: 0</li>
+            {% elif chars.intelligence == 12 or chars.intelligence == 13 %}
+                <li class="list-group-item text-center">Modifier: +1</li>
+            {% elif chars.intelligence == 14 or chars.intelligence == 15 %}
+                <li class="list-group-item text-center">Modifier: +2</li>
+            {% elif chars.intelligence == 16 or chars.intelligence == 17 %}
+                <li class="list-group-item text-center">Modifier: +3</li>
+            {% elif chars.intelligence == 18 or chars.intelligence == 19 %}
+                <li class="list-group-item text-center">Modifier: +4</li>
+            {% elif chars.intelligence == 20 %}
+                <li class="list-group-item text-center">Modifier: +5</li>
+            {% endif %}
 		</ul>
 	</div>
 	<div class="col-xl-2 col-lg-4 col-sm-6 pl-0 pr-0">
 		<ul class="list-group">
 			<li class="list-group-item text-center">Wisdom</li>
 			<li class="list-group-item text-center">{{chars.wisdom}}</li>
+            {% if chars.wisdom == 3 %}
+                <li class="list-group-item text-center">Modifier: -4</li>
+            {% elif chars.wisdom == 4 or chars.wisdom == 5 %}
+                <li class="list-group-item text-center">Modifier: -3</li>
+            {% elif chars.wisdom == 6 or chars.wisdom == 7 %}
+                <li class="list-group-item text-center">Modifier: -2</li>
+            {% elif chars.wisdom == 8 or chars.wisdom == 9 %}
+                <li class="list-group-item text-center">Modifier: -1</li>
+            {% elif chars.wisdom == 10 or chars.wisdom == 11 %}
+                <li class="list-group-item text-center">Modifier: 0</li>
+            {% elif chars.wisdom == 12 or chars.wisdom == 13 %}
+                <li class="list-group-item text-center">Modifier: +1</li>
+            {% elif chars.wisdom == 14 or chars.wisdom == 15 %}
+                <li class="list-group-item text-center">Modifier: +2</li>
+            {% elif chars.wisdom == 16 or chars.wisdom == 17 %}
+                <li class="list-group-item text-center">Modifier: +3</li>
+            {% elif chars.wisdom == 18 or chars.wisdom == 19 %}
+                <li class="list-group-item text-center">Modifier: +4</li>
+            {% elif chars.wisdom == 20 %}
+                <li class="list-group-item text-center">Modifier: +5</li>
+            {% endif %}
 		</ul>
 	</div>
 	<div class="col-xl-2 col-lg-4 col-sm-6 pl-0 pr-0">
 		<ul class="list-group">
 			<li class="list-group-item text-center">Charisma</li>
 			<li class="list-group-item text-center">{{chars.charisma}}</li>
+            {% if chars.charisma == 3 %}
+                <li class="list-group-item text-center">Modifier: -4</li>
+            {% elif chars.charisma == 4 or chars.charisma == 5 %}
+                <li class="list-group-item text-center">Modifier: -3</li>
+            {% elif chars.charisma == 6 or chars.charisma == 7 %}
+                <li class="list-group-item text-center">Modifier: -2</li>
+            {% elif chars.charisma == 8 or chars.charisma == 9 %}
+                <li class="list-group-item text-center">Modifier: -1</li>
+            {% elif chars.charisma == 10 or chars.charisma == 11 %}
+                <li class="list-group-item text-center">Modifier: 0</li>
+            {% elif chars.charisma == 12 or chars.charisma == 13 %}
+                <li class="list-group-item text-center">Modifier: +1</li>
+            {% elif chars.charisma == 14 or chars.charisma == 15 %}
+                <li class="list-group-item text-center">Modifier: +2</li>
+            {% elif chars.charisma == 16 or chars.charisma == 17 %}
+                <li class="list-group-item text-center">Modifier: +3</li>
+            {% elif chars.charisma == 18 or chars.charisma == 19 %}
+                <li class="list-group-item text-center">Modifier: +4</li>
+            {% elif chars.charisma == 20 %}
+                <li class="list-group-item text-center">Modifier: +5</li>
+            {% endif %}
 		</ul>
 	</div>
 </div>
 <div class="row m-1">
-	<div class="col-xl-2 col-lg-4 col-sm-6 pr-0">
+	<div class="col-xl-1 col-lg-4 col-4 pr-0">
 		<ul class="list-group">
 			<li class="list-group-item text-center">Proficiency</li>
 			<li class="list-group-item text-center">{{chars.skill.acrobatics}}</li>
@@ -102,7 +278,7 @@
 			<li class="list-group-item text-center">{{chars.skill.survival}}</li>
 		</ul>
 	</div>
-	<div class="col-xl-2 col-lg-4 col-sm-6 pl-0">
+	<div class="col-xl-2 col-lg-4 col-4 pl-0 pr-0">
 		<ul class="list-group">
 			<li class="list-group-item text-center">Skills</li>
 			<li class="list-group-item text-center">Acrobatics</li>
@@ -118,18 +294,2996 @@
 			<li class="list-group-item text-center">Nature</li>
 			<li class="list-group-item text-center">Perception</li>
 			<li class="list-group-item text-center">Performance</li>
-			<li class="list-group-item text-center">persuasion</li>
+			<li class="list-group-item text-center">Persuasion</li>
 			<li class="list-group-item text-center">Religion</li>
 			<li class="list-group-item text-center">Slight of Hand</li>
 			<li class="list-group-item text-center">Stealth</li>
 			<li class="list-group-item text-center">Survival</li>
 		</ul>
 	</div>
-	<div class="col-xl-2 col-lg-4 col-sm-6 pl-0">
+    <div class="col-xl-1 col-lg-4 col-4 pl-0">
+		<ul class="list-group">
+			<li class="list-group-item text-center">Bonus</li>
+            <!---This if statement works out what bonus the character has for the acrobatics skill, 
+            it checks to see what level in the top stats the character has, 
+            then checks whether the character is proficenet in a skill or not, 
+            then output the corresponding skill bonus to the html--->
+            {% if chars.dexterity == 3 %}
+                {% if chars.skill.acrobatics == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">-2</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">-1</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">0</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-4</li>
+                {% endif %}
+            {% elif chars.dexterity == 4 or chars.dexterity == 5 %}
+                {% if chars.skill.acrobatics == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">-1</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">0</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-3</li>
+                {% endif %}
+            {% elif chars.dexterity == 6 or chars.dexterity == 7 %}
+                {% if chars.skill.acrobatics == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">0</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-2</li>
+                {% endif %}
+            {% elif chars.dexterity == 8 or chars.dexterity == 9 %}
+                {% if chars.skill.acrobatics == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-1</li>
+                {% endif %}
+            {% elif chars.dexterity == 10 or chars.dexterity == 11 %}
+                {% if chars.skill.acrobatics == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">0</li>
+                {% endif %}
+            {% elif chars.dexterity == 12 or chars.dexterity == 13 %}
+                {% if chars.skill.acrobatics == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+1</li>
+                {% endif %}
+            {% elif chars.dexterity == 14 or chars.dexterity == 15 %}
+                {% if chars.skill.acrobatics == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+2</li>
+                {% endif %}
+            {% elif chars.dexterity == 16 or chars.dexterity == 17 %}
+                {% if chars.skill.acrobatics == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+9</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+3</li>
+                {% endif %}
+            {% elif chars.dexterity == 18 or chars.dexterity == 19 %}
+                {% if chars.skill.acrobatics == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+9</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+10</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+4</li>
+                {% endif %}
+            {% elif chars.dexterity == 20 %}
+                {% if chars.skill.acrobatics == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+9</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+10</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+11</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+5</li>
+                {% endif %}
+            {% endif %}
+            <!---This if statement works out what bonus the character has for the animal handling skill, 
+            it checks to see what level in the top stats the character has, 
+            then checks whether the character is proficenet in a skill or not, 
+            then output the corresponding skill bonus to the html--->
+            {% if chars.wisdom == 3 %}
+                {% if chars.skill.animal_handling == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">-2</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">-1</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">0</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-4</li>
+                {% endif %}
+            {% elif chars.wisdom == 4 or chars.wisdom == 5 %}
+                {% if chars.skill.animal_handling == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">-1</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">0</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-3</li>
+                {% endif %}
+            {% elif chars.wisdom == 6 or chars.wisdom == 7 %}
+                {% if chars.skill.animal_handling == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">0</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-2</li>
+                {% endif %}
+            {% elif chars.wisdom == 8 or chars.wisdom == 9 %}
+                {% if chars.skill.animal_handling == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-1</li>
+                {% endif %}
+            {% elif chars.wisdom == 10 or chars.wisdom == 11 %}
+                {% if chars.skill.animal_handling == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">0</li>
+                {% endif %}
+            {% elif chars.wisdom == 12 or chars.wisdom == 13 %}
+                {% if chars.skill.animal_handling == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+1</li>
+                {% endif %}
+            {% elif chars.wisdom == 14 or chars.wisdom == 15 %}
+                {% if chars.skill.animal_handling == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+2</li>
+                {% endif %}
+            {% elif chars.wisdom == 16 or chars.wisdom == 17 %}
+                {% if chars.skill.animal_handling == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+9</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+3</li>
+                {% endif %}
+            {% elif chars.wisdom == 18 or chars.wisdom == 19 %}
+                {% if chars.skill.animal_handling == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+9</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+10</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+4</li>
+                {% endif %}
+            {% elif chars.wisdom == 20 %}
+                {% if chars.skill.animal_handling == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+9</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+10</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+11</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+5</li>
+                {% endif %}
+            {% endif %}
+            <!---This if statement works out what bonus the character has for the arcana skill, 
+            it checks to see what level in the top stats the character has, 
+            then checks whether the character is proficenet in a skill or not, 
+            then output the corresponding skill bonus to the html--->
+			{% if chars.intelligence == 3 %}
+                {% if chars.skill.arcana == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">-2</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">-1</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">0</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-4</li>
+                {% endif %}
+            {% elif chars.intelligence == 4 or chars.intelligence == 5 %}
+                {% if chars.skill.arcana == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">-1</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">0</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-3</li>
+                {% endif %}
+            {% elif chars.intelligence == 6 or chars.intelligence == 7 %}
+                {% if chars.skill.arcana == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">0</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-2</li>
+                {% endif %}
+            {% elif chars.intelligence == 8 or chars.intelligence == 9 %}
+                {% if chars.skill.arcana == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-1</li>
+                {% endif %}
+            {% elif chars.intelligence == 10 or chars.intelligence == 11 %}
+                {% if chars.skill.arcana == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">0</li>
+                {% endif %}
+            {% elif chars.intelligence == 12 or chars.intelligence == 13 %}
+                {% if chars.skill.arcana == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+1</li>
+                {% endif %}
+            {% elif chars.intelligence == 14 or chars.intelligence == 15 %}
+                {% if chars.skill.arcana == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+2</li>
+                {% endif %}
+            {% elif chars.intelligence == 16 or chars.intelligence == 17 %}
+                {% if chars.skill.arcana == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+9</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+3</li>
+                {% endif %}
+            {% elif chars.intelligence == 18 or chars.intelligence == 19 %}
+                {% if chars.skill.arcana == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+9</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+10</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+4</li>
+                {% endif %}
+            {% elif chars.intelligence == 20 %}
+                {% if chars.skill.arcana == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+9</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+10</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+11</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+5</li>
+                {% endif %}
+            {% endif %}
+            <!---This if statement works out what bonus the character has for the athletics skill, 
+            it checks to see what level in the top stats the character has, 
+            then checks whether the character is proficenet in a skill or not, 
+            then output the corresponding skill bonus to the html--->
+			{% if chars.strength == 3 %}
+                {% if chars.skill.athletics == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">-2</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">-1</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">0</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-4</li>
+                {% endif %}
+            {% elif chars.strength == 4 or chars.strength == 5 %}
+                {% if chars.skill.athletics == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">-1</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">0</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-3</li>
+                {% endif %}
+            {% elif chars.strength == 6 or chars.strength == 7 %}
+                {% if chars.skill.athletics == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">0</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-2</li>
+                {% endif %}
+            {% elif chars.strength == 8 or chars.strength == 9 %}
+                {% if chars.skill.athletics == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-1</li>
+                {% endif %}
+            {% elif chars.strength == 10 or chars.strength == 11 %}
+                {% if chars.skill.athletics == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">0</li>
+                {% endif %}
+            {% elif chars.strength == 12 or chars.strength == 13 %}
+                {% if chars.skill.athletics == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+1</li>
+                {% endif %}
+            {% elif chars.strength == 14 or chars.strength == 15 %}
+                {% if chars.skill.athletics == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+2</li>
+                {% endif %}
+            {% elif chars.strength == 16 or chars.strength == 17 %}
+                {% if chars.skill.athletics == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+9</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+3</li>
+                {% endif %}
+            {% elif chars.strength == 18 or chars.strength == 19 %}
+                {% if chars.skill.athletics == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+9</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+10</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+4</li>
+                {% endif %}
+            {% elif chars.strength == 20 %}
+                {% if chars.skill.athletics == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+9</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+10</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+11</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+5</li>
+                {% endif %}
+            {% endif %}
+            <!---This if statement works out what bonus the character has for the deception skill, 
+            it checks to see what level in the top stats the character has, 
+            then checks whether the character is proficenet in a skill or not, 
+            then output the corresponding skill bonus to the html--->
+			{% if chars.charisma == 3 %}
+                {% if chars.skill.deception == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">-2</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">-1</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">0</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-4</li>
+                {% endif %}
+            {% elif chars.charisma == 4 or chars.charisma == 5 %}
+                {% if chars.skill.deception == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">-1</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">0</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-3</li>
+                {% endif %}
+            {% elif chars.charisma == 6 or chars.charisma == 7 %}
+                {% if chars.skill.deception == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">0</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-2</li>
+                {% endif %}
+            {% elif chars.charisma == 8 or chars.charisma == 9 %}
+                {% if chars.skill.deception == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-1</li>
+                {% endif %}
+            {% elif chars.charisma == 10 or chars.charisma == 11 %}
+                {% if chars.skill.deception == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">0</li>
+                {% endif %}
+            {% elif chars.charisma == 12 or chars.charisma == 13 %}
+                {% if chars.skill.deception == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+1</li>
+                {% endif %}
+            {% elif chars.charisma == 14 or chars.charisma == 15 %}
+                {% if chars.skill.deception == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+2</li>
+                {% endif %}
+            {% elif chars.charisma == 16 or chars.charisma == 17 %}
+                {% if chars.skill.deception == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+9</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+3</li>
+                {% endif %}
+            {% elif chars.charisma == 18 or chars.charisma == 19 %}
+                {% if chars.skill.deception == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+9</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+10</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+4</li>
+                {% endif %}
+            {% elif chars.charisma == 20 %}
+                {% if chars.skill.deception == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+9</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+10</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+11</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+5</li>
+                {% endif %}
+            {% endif %}
+            <!---This if statement works out what bonus the character has for the history skill, 
+            it checks to see what level in the top stats the character has, 
+            then checks whether the character is proficenet in a skill or not, 
+            then output the corresponding skill bonus to the html--->
+			{% if chars.intelligence == 3 %}
+                {% if chars.skill.history == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">-2</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">-1</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">0</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-4</li>
+                {% endif %}
+            {% elif chars.intelligence == 4 or chars.intelligence == 5 %}
+                {% if chars.skill.history == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">-1</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">0</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-3</li>
+                {% endif %}
+            {% elif chars.intelligence == 6 or chars.intelligence == 7 %}
+                {% if chars.skill.history == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">0</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-2</li>
+                {% endif %}
+            {% elif chars.intelligence == 8 or chars.intelligence == 9 %}
+                {% if chars.skill.history == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-1</li>
+                {% endif %}
+            {% elif chars.intelligence == 10 or chars.intelligence == 11 %}
+                {% if chars.skill.history == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">0</li>
+                {% endif %}
+            {% elif chars.intelligence == 12 or chars.intelligence == 13 %}
+                {% if chars.skill.history == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+1</li>
+                {% endif %}
+            {% elif chars.intelligence == 14 or chars.intelligence == 15 %}
+                {% if chars.skill.history == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+2</li>
+                {% endif %}
+            {% elif chars.intelligence == 16 or chars.intelligence == 17 %}
+                {% if chars.skill.history == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+9</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+3</li>
+                {% endif %}
+            {% elif chars.intelligence == 18 or chars.intelligence == 19 %}
+                {% if chars.skill.history == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+9</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+10</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+4</li>
+                {% endif %}
+            {% elif chars.intelligence == 20 %}
+                {% if chars.skill.history == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+9</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+10</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+11</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+5</li>
+                {% endif %}
+            {% endif %}
+            <!---This if statement works out what bonus the character has for the insight skill, 
+            it checks to see what level in the top stats the character has, 
+            then checks whether the character is proficenet in a skill or not, 
+            then output the corresponding skill bonus to the html--->
+            {% if chars.wisdom == 3 %}
+                {% if chars.skill.insight == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">-2</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">-1</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">0</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-4</li>
+                {% endif %}
+            {% elif chars.wisdom == 4 or chars.wisdom == 5 %}
+                {% if chars.skill.insight == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">-1</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">0</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-3</li>
+                {% endif %}
+            {% elif chars.wisdom == 6 or chars.wisdom == 7 %}
+                {% if chars.skill.insight == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">0</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-2</li>
+                {% endif %}
+            {% elif chars.wisdom == 8 or chars.wisdom == 9 %}
+                {% if chars.skill.insight == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-1</li>
+                {% endif %}
+            {% elif chars.wisdom == 10 or chars.wisdom == 11 %}
+                {% if chars.skill.insight == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">0</li>
+                {% endif %}
+            {% elif chars.wisdom == 12 or chars.wisdom == 13 %}
+                {% if chars.skill.insight == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+1</li>
+                {% endif %}
+            {% elif chars.wisdom == 14 or chars.wisdom == 15 %}
+                {% if chars.skill.insight == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+2</li>
+                {% endif %}
+            {% elif chars.wisdom == 16 or chars.wisdom == 17 %}
+                {% if chars.skill.insight == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+9</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+3</li>
+                {% endif %}
+            {% elif chars.wisdom == 18 or chars.wisdom == 19 %}
+                {% if chars.skill.insight == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+9</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+10</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+4</li>
+                {% endif %}
+            {% elif chars.wisdom == 20 %}
+                {% if chars.skill.insight == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+9</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+10</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+11</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+5</li>
+                {% endif %}
+            {% endif %}
+            <!---This if statement works out what bonus the character has for the intimidation skill, 
+            it checks to see what level in the top stats the character has, 
+            then checks whether the character is proficenet in a skill or not, 
+            then output the corresponding skill bonus to the html--->
+			{% if chars.charisma == 3 %}
+                {% if chars.skill.intimidation == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">-2</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">-1</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">0</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-4</li>
+                {% endif %}
+            {% elif chars.charisma == 4 or chars.charisma == 5 %}
+                {% if chars.skill.intimidation == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">-1</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">0</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-3</li>
+                {% endif %}
+            {% elif chars.charisma == 6 or chars.charisma == 7 %}
+                {% if chars.skill.intimidation == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">0</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-2</li>
+                {% endif %}
+            {% elif chars.charisma == 8 or chars.charisma == 9 %}
+                {% if chars.skill.intimidation == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-1</li>
+                {% endif %}
+            {% elif chars.charisma == 10 or chars.charisma == 11 %}
+                {% if chars.skill.intimidation == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">0</li>
+                {% endif %}
+            {% elif chars.charisma == 12 or chars.charisma == 13 %}
+                {% if chars.skill.intimidation == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+1</li>
+                {% endif %}
+            {% elif chars.charisma == 14 or chars.charisma == 15 %}
+                {% if chars.skill.intimidation == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+2</li>
+                {% endif %}
+            {% elif chars.charisma == 16 or chars.charisma == 17 %}
+                {% if chars.skill.intimidation == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+9</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+3</li>
+                {% endif %}
+            {% elif chars.charisma == 18 or chars.charisma == 19 %}
+                {% if chars.skill.intimidation == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+9</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+10</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+4</li>
+                {% endif %}
+            {% elif chars.charisma == 20 %}
+                {% if chars.skill.intimidation == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+9</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+10</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+11</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+5</li>
+                {% endif %}
+            {% endif %}
+            <!---This if statement works out what bonus the character has for the investigation skill, 
+            it checks to see what level in the top stats the character has, 
+            then checks whether the character is proficenet in a skill or not, 
+            then output the corresponding skill bonus to the html--->
+			{% if chars.intelligence == 3 %}
+                {% if chars.skill.investigation == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">-2</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">-1</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">0</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-4</li>
+                {% endif %}
+            {% elif chars.intelligence == 4 or chars.intelligence == 5 %}
+                {% if chars.skill.investigation == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">-1</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">0</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-3</li>
+                {% endif %}
+            {% elif chars.intelligence == 6 or chars.intelligence == 7 %}
+                {% if chars.skill.investigation == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">0</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-2</li>
+                {% endif %}
+            {% elif chars.intelligence == 8 or chars.intelligence == 9 %}
+                {% if chars.skill.investigation == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-1</li>
+                {% endif %}
+            {% elif chars.intelligence == 10 or chars.intelligence == 11 %}
+                {% if chars.skill.investigation == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">0</li>
+                {% endif %}
+            {% elif chars.intelligence == 12 or chars.intelligence == 13 %}
+                {% if chars.skill.investigation == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+1</li>
+                {% endif %}
+            {% elif chars.intelligence == 14 or chars.intelligence == 15 %}
+                {% if chars.skill.investigation == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+2</li>
+                {% endif %}
+            {% elif chars.intelligence == 16 or chars.intelligence == 17 %}
+                {% if chars.skill.investigation == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+9</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+3</li>
+                {% endif %}
+            {% elif chars.intelligence == 18 or chars.intelligence == 19 %}
+                {% if chars.skill.investigation == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+9</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+10</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+4</li>
+                {% endif %}
+            {% elif chars.intelligence == 20 %}
+                {% if chars.skill.investigation == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+9</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+10</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+11</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+5</li>
+                {% endif %}
+            {% endif %}
+            <!---This if statement works out what bonus the character has for the medicine skill, 
+            it checks to see what level in the top stats the character has, 
+            then checks whether the character is proficenet in a skill or not, 
+            then output the corresponding skill bonus to the html--->
+            {% if chars.wisdom == 3 %}
+                {% if chars.skill.medicine == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">-2</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">-1</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">0</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-4</li>
+                {% endif %}
+            {% elif chars.wisdom == 4 or chars.wisdom == 5 %}
+                {% if chars.skill.medicine == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">-1</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">0</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-3</li>
+                {% endif %}
+            {% elif chars.wisdom == 6 or chars.wisdom == 7 %}
+                {% if chars.skill.medicine == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">0</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-2</li>
+                {% endif %}
+            {% elif chars.wisdom == 8 or chars.wisdom == 9 %}
+                {% if chars.skill.medicine == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-1</li>
+                {% endif %}
+            {% elif chars.wisdom == 10 or chars.wisdom == 11 %}
+                {% if chars.skill.medicine == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">0</li>
+                {% endif %}
+            {% elif chars.wisdom == 12 or chars.wisdom == 13 %}
+                {% if chars.skill.medicine == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+1</li>
+                {% endif %}
+            {% elif chars.wisdom == 14 or chars.wisdom == 15 %}
+                {% if chars.skill.medicine == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+2</li>
+                {% endif %}
+            {% elif chars.wisdom == 16 or chars.wisdom == 17 %}
+                {% if chars.skill.medicine == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+9</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+3</li>
+                {% endif %}
+            {% elif chars.wisdom == 18 or chars.wisdom == 19 %}
+                {% if chars.skill.medicine == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+9</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+10</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+4</li>
+                {% endif %}
+            {% elif chars.wisdom == 20 %}
+                {% if chars.skill.medicine == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+9</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+10</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+11</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+5</li>
+                {% endif %}
+            {% endif %}
+            <!---This if statement works out what bonus the character has for the nature skill, 
+            it checks to see what level in the top stats the character has, 
+            then checks whether the character is proficenet in a skill or not, 
+            then output the corresponding skill bonus to the html--->
+            {% if chars.intelligence == 3 %}
+                {% if chars.skill.nature == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">-2</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">-1</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">0</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-4</li>
+                {% endif %}
+            {% elif chars.intelligence == 4 or chars.intelligence == 5 %}
+                {% if chars.skill.nature == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">-1</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">0</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-3</li>
+                {% endif %}
+            {% elif chars.intelligence == 6 or chars.intelligence == 7 %}
+                {% if chars.skill.nature == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">0</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-2</li>
+                {% endif %}
+            {% elif chars.intelligence == 8 or chars.intelligence == 9 %}
+                {% if chars.skill.nature == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-1</li>
+                {% endif %}
+            {% elif chars.intelligence == 10 or chars.intelligence == 11 %}
+                {% if chars.skill.nature == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">0</li>
+                {% endif %}
+            {% elif chars.intelligence == 12 or chars.intelligence == 13 %}
+                {% if chars.skill.nature == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+1</li>
+                {% endif %}
+            {% elif chars.intelligence == 14 or chars.intelligence == 15 %}
+                {% if chars.skill.nature == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+2</li>
+                {% endif %}
+            {% elif chars.intelligence == 16 or chars.intelligence == 17 %}
+                {% if chars.skill.nature == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+9</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+3</li>
+                {% endif %}
+            {% elif chars.intelligence == 18 or chars.intelligence == 19 %}
+                {% if chars.skill.nature == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+9</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+10</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+4</li>
+                {% endif %}
+            {% elif chars.intelligence == 20 %}
+                {% if chars.skill.nature == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+9</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+10</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+11</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+5</li>
+                {% endif %}
+            {% endif %}
+            <!---This if statement works out what bonus the character has for the perception skill, 
+            it checks to see what level in the top stats the character has, 
+            then checks whether the character is proficenet in a skill or not, 
+            then output the corresponding skill bonus to the html--->
+            {% if chars.wisdom == 3 %}
+                {% if chars.skill.perception == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">-2</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">-1</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">0</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-4</li>
+                {% endif %}
+            {% elif chars.wisdom == 4 or chars.wisdom == 5 %}
+                {% if chars.skill.perception == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">-1</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">0</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-3</li>
+                {% endif %}
+            {% elif chars.wisdom == 6 or chars.wisdom == 7 %}
+                {% if chars.skill.perception == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">0</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-2</li>
+                {% endif %}
+            {% elif chars.wisdom == 8 or chars.wisdom == 9 %}
+                {% if chars.skill.perception == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-1</li>
+                {% endif %}
+            {% elif chars.wisdom == 10 or chars.wisdom == 11 %}
+                {% if chars.skill.perception == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">0</li>
+                {% endif %}
+            {% elif chars.wisdom == 12 or chars.wisdom == 13 %}
+                {% if chars.skill.perception == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+1</li>
+                {% endif %}
+            {% elif chars.wisdom == 14 or chars.wisdom == 15 %}
+                {% if chars.skill.perception == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+2</li>
+                {% endif %}
+            {% elif chars.wisdom == 16 or chars.wisdom == 17 %}
+                {% if chars.skill.perception == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+9</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+3</li>
+                {% endif %}
+            {% elif chars.wisdom == 18 or chars.wisdom == 19 %}
+                {% if chars.skill.perception == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+9</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+10</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+4</li>
+                {% endif %}
+            {% elif chars.wisdom == 20 %}
+                {% if chars.skill.perception == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+9</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+10</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+11</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+5</li>
+                {% endif %}
+            {% endif %}
+            <!---This if statement works out what bonus the character has for the performance skill, 
+            it checks to see what level in the top stats the character has, 
+            then checks whether the character is proficenet in a skill or not, 
+            then output the corresponding skill bonus to the html--->
+            {% if chars.charisma == 3 %}
+                {% if chars.skill.performance == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">-2</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">-1</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">0</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-4</li>
+                {% endif %}
+            {% elif chars.charisma == 4 or chars.charisma == 5 %}
+                {% if chars.skill.performance == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">-1</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">0</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-3</li>
+                {% endif %}
+            {% elif chars.charisma == 6 or chars.charisma == 7 %}
+                {% if chars.skill.performance == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">0</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-2</li>
+                {% endif %}
+            {% elif chars.charisma == 8 or chars.charisma == 9 %}
+                {% if chars.skill.performance == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-1</li>
+                {% endif %}
+            {% elif chars.charisma == 10 or chars.charisma == 11 %}
+                {% if chars.skill.performance == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">0</li>
+                {% endif %}
+            {% elif chars.charisma == 12 or chars.charisma == 13 %}
+                {% if chars.skill.performance == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+1</li>
+                {% endif %}
+            {% elif chars.charisma == 14 or chars.charisma == 15 %}
+                {% if chars.skill.performance == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+2</li>
+                {% endif %}
+            {% elif chars.charisma == 16 or chars.charisma == 17 %}
+                {% if chars.skill.performance == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+9</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+3</li>
+                {% endif %}
+            {% elif chars.charisma == 18 or chars.charisma == 19 %}
+                {% if chars.skill.performance == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+9</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+10</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+4</li>
+                {% endif %}
+            {% elif chars.charisma == 20 %}
+                {% if chars.skill.performance == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+9</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+10</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+11</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+5</li>
+                {% endif %}
+            {% endif %}
+            <!---This if statement works out what bonus the character has for the persuasion skill, 
+            it checks to see what level in the top stats the character has, 
+            then checks whether the character is proficenet in a skill or not, 
+            then output the corresponding skill bonus to the html--->
+            {% if chars.charisma == 3 %}
+                {% if chars.skill.persuasion == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">-2</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">-1</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">0</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-4</li>
+                {% endif %}
+            {% elif chars.charisma == 4 or chars.charisma == 5 %}
+                {% if chars.skill.persuasion == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">-1</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">0</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-3</li>
+                {% endif %}
+            {% elif chars.charisma == 6 or chars.charisma == 7 %}
+                {% if chars.skill.persuasion == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">0</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-2</li>
+                {% endif %}
+            {% elif chars.charisma == 8 or chars.charisma == 9 %}
+                {% if chars.skill.persuasion == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-1</li>
+                {% endif %}
+            {% elif chars.charisma == 10 or chars.charisma == 11 %}
+                {% if chars.skill.persuasion == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">0</li>
+                {% endif %}
+            {% elif chars.charisma == 12 or chars.charisma == 13 %}
+                {% if chars.skill.persuasion == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+1</li>
+                {% endif %}
+            {% elif chars.charisma == 14 or chars.charisma == 15 %}
+                {% if chars.skill.persuasion == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+2</li>
+                {% endif %}
+            {% elif chars.charisma == 16 or chars.charisma == 17 %}
+                {% if chars.skill.persuasion == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+9</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+3</li>
+                {% endif %}
+            {% elif chars.charisma == 18 or chars.charisma == 19 %}
+                {% if chars.skill.persuasion == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+9</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+10</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+4</li>
+                {% endif %}
+            {% elif chars.charisma == 20 %}
+                {% if chars.skill.persuasion == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+9</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+10</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+11</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+5</li>
+                {% endif %}
+            {% endif %}
+            <!---This if statement works out what bonus the character has for the religion skill, 
+            it checks to see what level in the top stats the character has, 
+            then checks whether the character is proficenet in a skill or not, 
+            then output the corresponding skill bonus to the html--->
+            {% if chars.intelligence == 3 %}
+                {% if chars.skill.religion == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">-2</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">-1</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">0</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-4</li>
+                {% endif %}
+            {% elif chars.intelligence == 4 or chars.intelligence == 5 %}
+                {% if chars.skill.religion == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">-1</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">0</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-3</li>
+                {% endif %}
+            {% elif chars.intelligence == 6 or chars.intelligence == 7 %}
+                {% if chars.skill.religion == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">0</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-2</li>
+                {% endif %}
+            {% elif chars.intelligence == 8 or chars.intelligence == 9 %}
+                {% if chars.skill.religion == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-1</li>
+                {% endif %}
+            {% elif chars.intelligence == 10 or chars.intelligence == 11 %}
+                {% if chars.skill.religion == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">0</li>
+                {% endif %}
+            {% elif chars.intelligence == 12 or chars.intelligence == 13 %}
+                {% if chars.skill.religion == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+1</li>
+                {% endif %}
+            {% elif chars.intelligence == 14 or chars.intelligence == 15 %}
+                {% if chars.skill.religion == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+2</li>
+                {% endif %}
+            {% elif chars.intelligence == 16 or chars.intelligence == 17 %}
+                {% if chars.skill.religion == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+9</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+3</li>
+                {% endif %}
+            {% elif chars.intelligence == 18 or chars.intelligence == 19 %}
+                {% if chars.skill.religion == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+9</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+10</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+4</li>
+                {% endif %}
+            {% elif chars.intelligence == 20 %}
+                {% if chars.skill.religion == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+9</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+10</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+11</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+5</li>
+                {% endif %}
+            {% endif %}
+            <!---This if statement works out what bonus the character has for the slight of hand skill, 
+            it checks to see what level in the top stats the character has, 
+            then checks whether the character is proficenet in a skill or not, 
+            then output the corresponding skill bonus to the html--->
+			{% if chars.dexterity == 3 %}
+                {% if chars.skill.slight_of_hand == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">-2</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">-1</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">0</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-4</li>
+                {% endif %}
+            {% elif chars.dexterity == 4 or chars.dexterity == 5 %}
+                {% if chars.skill.slight_of_hand == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">-1</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">0</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-3</li>
+                {% endif %}
+            {% elif chars.dexterity == 6 or chars.dexterity == 7 %}
+                {% if chars.skill.slight_of_hand == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">0</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-2</li>
+                {% endif %}
+            {% elif chars.dexterity == 8 or chars.dexterity == 9 %}
+                {% if chars.skill.slight_of_hand == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-1</li>
+                {% endif %}
+            {% elif chars.dexterity == 10 or chars.dexterity == 11 %}
+                {% if chars.skill.slight_of_hand == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">0</li>
+                {% endif %}
+            {% elif chars.dexterity == 12 or chars.dexterity == 13 %}
+                {% if chars.skill.slight_of_hand == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+1</li>
+                {% endif %}
+            {% elif chars.dexterity == 14 or chars.dexterity == 15 %}
+                {% if chars.skill.slight_of_hand == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+2</li>
+                {% endif %}
+            {% elif chars.dexterity == 16 or chars.dexterity == 17 %}
+                {% if chars.skill.slight_of_hand == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+9</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+3</li>
+                {% endif %}
+            {% elif chars.dexterity == 18 or chars.dexterity == 19 %}
+                {% if chars.skill.slight_of_hand == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+9</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+10</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+4</li>
+                {% endif %}
+            {% elif chars.dexterity == 20 %}
+                {% if chars.skill.slight_of_hand == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+9</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+10</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+11</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+5</li>
+                {% endif %}
+            {% endif %}
+            <!---This if statement works out what bonus the character has for the stealth skill, 
+            it checks to see what level in the top stats the character has, 
+            then checks whether the character is proficenet in a skill or not, 
+            then output the corresponding skill bonus to the html--->
+            {% if chars.dexterity == 3 %}
+                {% if chars.skill.stealth == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">-2</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">-1</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">0</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-4</li>
+                {% endif %}
+            {% elif chars.dexterity == 4 or chars.dexterity == 5 %}
+                {% if chars.skill.stealth == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">-1</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">0</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-3</li>
+                {% endif %}
+            {% elif chars.dexterity == 6 or chars.dexterity == 7 %}
+                {% if chars.skill.stealth == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">0</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-2</li>
+                {% endif %}
+            {% elif chars.dexterity == 8 or chars.dexterity == 9 %}
+                {% if chars.skill.stealth == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-1</li>
+                {% endif %}
+            {% elif chars.dexterity == 10 or chars.dexterity == 11 %}
+                {% if chars.skill.stealth == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">0</li>
+                {% endif %}
+            {% elif chars.dexterity == 12 or chars.dexterity == 13 %}
+                {% if chars.skill.stealth == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+1</li>
+                {% endif %}
+            {% elif chars.dexterity == 14 or chars.dexterity == 15 %}
+                {% if chars.skill.stealth == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+2</li>
+                {% endif %}
+            {% elif chars.dexterity == 16 or chars.dexterity == 17 %}
+                {% if chars.skill.stealth == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+9</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+3</li>
+                {% endif %}
+            {% elif chars.dexterity == 18 or chars.dexterity == 19 %}
+                {% if chars.skill.stealth == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+9</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+10</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+4</li>
+                {% endif %}
+            {% elif chars.dexterity == 20 %}
+                {% if chars.skill.stealth == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+9</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+10</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+11</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+5</li>
+                {% endif %}
+            {% endif %}
+            <!---This if statement works out what bonus the character has for the suvival skill, 
+            it checks to see what level in the top stats the character has, 
+            then checks whether the character is proficenet in a skill or not, 
+            then output the corresponding skill bonus to the html--->
+            {% if chars.wisdom == 3 %}
+                {% if chars.skill.survival == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">-2</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">-1</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">0</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-4</li>
+                {% endif %}
+            {% elif chars.wisdom == 4 or chars.wisdom == 5 %}
+                {% if chars.skill.survival == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">-1</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">0</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-3</li>
+                {% endif %}
+            {% elif chars.wisdom == 6 or chars.wisdom == 7 %}
+                {% if chars.skill.survival == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">0</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-2</li>
+                {% endif %}
+            {% elif chars.wisdom == 8 or chars.wisdom == 9 %}
+                {% if chars.skill.survival == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+1</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">-1</li>
+                {% endif %}
+            {% elif chars.wisdom == 10 or chars.wisdom == 11 %}
+                {% if chars.skill.survival == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+2</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">0</li>
+                {% endif %}
+            {% elif chars.wisdom == 12 or chars.wisdom == 13 %}
+                {% if chars.skill.survival == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+3</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+1</li>
+                {% endif %}
+            {% elif chars.wisdom == 14 or chars.wisdom == 15 %}
+                {% if chars.skill.survival == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+4</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+2</li>
+                {% endif %}
+            {% elif chars.wisdom == 16 or chars.wisdom == 17 %}
+                {% if chars.skill.survival == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+5</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+9</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+3</li>
+                {% endif %}
+            {% elif chars.wisdom == 18 or chars.wisdom == 19 %}
+                {% if chars.skill.survival == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+6</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+9</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+10</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+4</li>
+                {% endif %}
+            {% elif chars.wisdom == 20 %}
+                {% if chars.skill.survival == "Yes" %}
+                    {% if chars.level <= 4 %}
+			            <li class="list-group-item text-center">+7</li>
+                    {% elif chars.level <= 8 and chars.level >= 5 %}
+			            <li class="list-group-item text-center">+8</li>
+                    {% elif chars.level <= 12 and chars.level >= 9 %}
+			            <li class="list-group-item text-center">+9</li>
+                    {% elif chars.level <= 16 and chars.level >= 13 %}
+			            <li class="list-group-item text-center">+10</li>
+                    {% elif chars.level <= 20 and chars.level >= 17 %}
+			            <li class="list-group-item text-center">+11</li>
+                    {% endif %}
+                {% else %}
+                        <li class="list-group-item text-center">+5</li>
+                {% endif %}
+            {% endif %}
+		</ul>
+	</div>
+	<div class="col-xl-2 col-lg-4 col-sm-12 pl-0 pr-0">
 		<ul class="list-group">
 			<li class="list-group-item text-center">Modifier</li>
+			<li class="list-group-item text-center">0</li>
 			<li class="list-group-item text-center">Spell Attack</li>
+			<li class="list-group-item text-center">0</li>
 			<li class="list-group-item text-center">Save DC</li>
+			<li class="list-group-item text-center">0</li>
 		</ul>
 	</div>
 	<div class="col-xl-4 pr-0">
@@ -275,6 +3429,7 @@
 	</div>
 	<div class="row m-1">
 		<div class="col-xl-4 pr-0">
+			<h2>Weapons, Armor and Tools</h2>
 			<table class="table">
 				<tbody>
 					<tr>
@@ -322,6 +3477,7 @@
 	</div>
 	<div class="row m-1">
 		<div class="col-xl-4 pr-0">
+			<h2>Features and Feats</h2>
 			<table class="table">
 				<tbody>
 					<tr>
@@ -369,7 +3525,8 @@
 	</div>
 </div>
 {% endfor %}
+</div>
 {% endblock %}
 {% block footer %}
-    {{ super() }}
+{{ super() }}
 {% endblock %}
