@@ -6,25 +6,28 @@
 <script src="{{url_for('static', filename='sidenav.js')}}"></script>
 {% endblock %}
 {% block content %}
+<div class="top"></div>
 {% for chars in char%}
-<div id="mySidenav" class="sidenav">
-  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+<div id="mySidenav{{chars.char_numb}}" class="sidenav">
+  <a href="javascript:void(0)" class="closebtn" onclick="closeNav{{chars.char_numb}}()">&times;</a>
   <a class="active" href="#">Characters</a>
     <ul>
+        <li><a href="#top">Top</a></li>
+        <li><a href="#next{{chars.char_numb + 1}}">Next</a></li>
     </ul>
-  <a href="#">Services</a>
-  <a href="#">Clients</a>
-  <a href="#">Contact</a>
+  <a href="{{ url_for('new_character', name=name) }}">New Character</a>
+  <a href="{{ url_for('update_character', name=name) }}">Update</a>
 </div>
-<button class="m-1" onclick="openNav()">Open</button>
+<button class="m-1" onclick="openNav{{chars.char_numb}}()">Open</button>
 <div id="main">
 <div class="row m-1 m-1">
+    <div id="next{{chars.char_numb}}"></div>
 	<h1 class="m-auto">{{chars.user|capitalize}} - {{chars.character_name|capitalize}}</h1>
 </div>
 <div class="row m-1 m-1">
 	<div class="col-xl-3 col-lg-4 col-sm-6 pr-0">
 		<ul class="list-group">
-			<li class="list-group-item">{{chars.clss}}</li>
+			<li class="list-group-item">{{chars.clss1}}/{{chars.clss2}}</li>
 			<li class="list-group-item">{{chars.subclass}}</li>
 		</ul>
 	</div>

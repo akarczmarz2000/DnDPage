@@ -2,8 +2,20 @@
 {% block title %}Welcome {{name}}!{% endblock %}
 {% block head %}
 {{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<script src="{{url_for('static', filename='sidenav.js')}}"></script>
 {% endblock %}
 {% block content %}
+<div id="mySidenav" class="sidenav">
+  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+  {% if char_numb >= 2 %}
+    <a  href="{{ url_for('character_url', name=name) }}">Characters</a>
+    <a href="{{ url_for('update_character', name=name) }}">Update</a>
+  {% endif %}
+  <a class="active" href="#">New Character</a>
+</div>
+<button class="m-1" onclick="openNav()">Open</button>
+<div id="main">
 <div class="row m-1 m-1">
 	<h1 class="text-center">Welcome! - Create your character!</h1>
 </div>
@@ -20,7 +32,7 @@
         </div>
         <div class="form-group col-xl-4">
 			<label for="char_numb">Character Number:</label>
-			<input type="text" class="form-control" id="char_numb" name="char_numb" value="1">
+			<input type="text" class="form-control" id="char_numb" name="char_numb" value="{{char_numb}}">
         </div>
 		<div class="form-group col-xl-4">
 			<label for="character_name">Character Name:</label>
@@ -30,7 +42,7 @@
     <div class="form-row">
 		<div class="form-group col-xl-4">
 			<label for="class">Class:</label>
-			<select class="form-control" id="class" name="class">
+			<select class="form-control" id="class1" name="class1">
                 <option value="" disabled selected>Choose Class</option>
                 {% for class in classes%}
                     <option name="class" value="{{class.class}}">{{class.class}}</option>
@@ -62,7 +74,7 @@
         </div>
         <div class="form-group col-xl-3">
 			<label for="subclass_level">Individual Class Level:</label>
-			<input class="form-control" type="text" id="subclass_lvl" name="subclass_lvl">
+			<input class="form-control" type="text" id="subclass_level" name="subclass_level">
             <p><small>This is the split you have choosen for you multiclass levels, main class/secondary class.</small></p>
         </div>
 		<div class="form-group col-xl-2">

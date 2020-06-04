@@ -1,0 +1,1079 @@
+{% extends "base.html" %}
+{% block title %}Welcome {{name}}!{% endblock %}
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<script src="{{url_for('static', filename='sidenav.js')}}"></script>
+{% endblock %}
+{% block content %}
+<div class="row m-1">
+	<h1 class="m-auto text-center">Welcome! - Update your character!</h1>
+</div>
+{% for chars in char %}
+<div id="mySidenav{{chars.char_numb}}" class="sidenav">
+  <a href="javascript:void(0)" class="closebtn" onclick="closeNav{{chars.char_numb}}()">&times;</a>
+  <a href="{{ url_for('character_url', name=name) }}">Characters</a>
+  <a href="{{ url_for('new_character', name=name) }}">New Character</a>
+  <a class="active" href="#">Update</a>
+</div>
+<button class="m-1" onclick="openNav{{chars.char_numb}}()">Open</button>
+<div id="main">
+<div class="row m-1 m-1">
+	<p>If you require information not supplied here for the creating of your character, please use an official retailer
+		to obtain a copy
+		of the books. We will not supply any information about specifics as this would be a copyright infringement,
+		thank you.</p>
+	<form action="{{ url_for('update', name=name) }}" name="character" method="post" class="m-1">
+    <div class="form-row">
+        <div class="form-group col-xl-4">
+        </div>
+        <div class="form-group col-xl-4">
+            <label for="id">Character Id:</label>
+            <input type="text" class="form-control" id="char_id" name="char_id" readonly value="{{chars.char_id}}">
+        </div>
+        <div class="form-group col-xl-4">
+        </div>
+    </div>
+    <div class="form-row">
+		<div class="form-group col-xl-4">
+			<label for="username">Users Name:</label>
+			<input type="text" class="form-control" id="username" name="username" readonly value="{{chars.user}}">
+        </div>
+        <div class="form-group col-xl-4">
+			<label for="char_numb">Character Number:</label>
+			<input type="text" class="form-control" id="char_numb" name="char_numb" readonly value="{{chars.char_numb}}">
+        </div>
+		<div class="form-group col-xl-4">
+			<label for="character_name">Character Name:</label>
+			<input type="text" class="form-control" id="character_name" name="character_name" value="{{chars.character_name}}">
+        </div>
+    </div>
+    <div class="form-row">
+		<div class="form-group col-xl-6">
+			<label for="class">Class:</label>
+			<select class="form-control" id="class1" name="class1">
+                <option value="{{chars.clss1}}" readonly selected>{{chars.clss1}}</option>
+                {% for class in classes%}
+                    <option name="class" value="{{class.class}}">{{class.class}}</option>
+                {% endfor %}
+            </select>
+            <select class="form-control" id="class2" name="class2">
+                <option value="{{chars.clss2}}" readonly selected>{{chars.clss2}}</option>
+                {% for class in cls%}
+                    <option name="class2" value="{{class.class}}">{{class.class}}</option>
+                {% endfor %}
+            </select>
+		</div>
+		<div class="form-group col-xl-6">
+			<label for="subclass">Class Specialisation:</label>
+			<input class="form-control" type="text" id="subclass" name="subclass" value="{{chars.subclass}}">
+		</div>
+        </div>
+        <div class="form-row">
+        <div class="form-group col-xl-3">
+			<label for="level">Level:</label>
+			<input class="form-control" type="text" id="level" name="level" value="{{chars.level}}">
+        </div>
+        <div class="form-group col-xl-3">
+			<label for="subclass_level">Individual Class Level:</label>
+			<input class="form-control" type="text" id="subclass_level" name="subclass_level" value="{{chars.subclass_level}}">
+            <p><small>This is the split you have choosen for you multiclass levels, main class/secondary class.</small></p>
+        </div>
+		<div class="form-group col-xl-2">
+			<label for="race">Race:</label>
+			<select class="form-control" id="race" name="race">
+                <option value="{{chars.race}}" readonly selected>{{chars.race}}</option>
+                {% for race in race%}
+                    <option value="{{race.race}}">{{race.race}}</option>
+                {% endfor %}
+            </select>
+		</div>
+		<div class="form-group col-xl-2">
+			<label for="gender">Gender:</label>
+			<select class="form-control" id="gender" name="gender">
+                <option value="{{chars.gender}}" readonly selected>{{chars.gender}}</option>
+                <option value="female">Female</option>
+                <option value="male">Male</option>
+                <option value="other">Other</option>
+            </select>
+		</div>
+		<div class="form-group col-xl-2">
+			<label for="hit_points">Hit Points:</label>
+			<input class="form-control" type="text" id="hit_points" name="hit_points"  value="{{chars.hit_points}}">
+        </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group m-auto">
+                <h3 class="text-center">Stats</h3>
+                <p><small>To determine these stats refer to the character creation section of the 5e Player's Handbook or ask your Dungeon Master.</small></p>
+            </div>
+        </div>
+        <div class="form-row">
+		<div class="form-group d-flex justify-content-center col-xl-4">
+		    <label for="strength">Strength:</label>
+	        <input class="form-control" type="text" id="strength" name="strength" value="{{chars.strength}}">
+        </div>
+		<div class="form-group d-flex justify-content-center col-xl-4">
+			<label for="dexterity">Dexterity:</label>
+			<input class="form-control" type="text" id="dexterity" name="dexterity" value="{{chars.dexterity}}">
+        </div>
+		<div class="form-group d-flex justify-content-center col-xl-4">
+			<label for="constitution">Constitution:</label>
+			<input class="form-control" type="text" id="constitution" name="constitution" value="{{chars.constitution}}">
+        </div>
+		<div class="form-group d-flex justify-content-center col-xl-4">
+			<label for="intelligence">Intelligence:</label>
+			<input class="form-control" type="text" id="intelligence" name="intelligence" value="{{chars.intelligence}}">
+        </div>
+		<div class="form-group d-flex justify-content-center col-xl-4">
+			<label for="wisdom">Wisdom:</label>
+			<input class="form-control" type="text" id="wisdom" name="wisdom" value="{{chars.wisdom}}">
+        </div>
+		<div class="form-group d-flex justify-content-center col-xl-4">
+			<label for="charisma">Charisma:</label>
+			<input class="form-control" type="text" id="charisma" name="charisma" value="{{chars.charisma}}">
+        </div>
+        </div>
+        <div class="form-row">
+		<div class="form-group m-1">
+			<label for="acrobatics">Acrobatics Proficiency:</label>
+			<select id="acrobatics" name="acrobatics">
+                <option value="{{chars.skill.acrobatics}}" readonly selected>{{chars.skill.acrobatics}}</option>
+                <option value="No">No</option>
+                <option value="Yes">Yes</option>
+            </select>
+        </div>
+		<div class="form-group m-1">
+			<label for="animal_handling">Animal Handling Proficiency:</label>
+			<select id="animal_handling" name="animal_handling">
+                <option value="{{chars.skill.animal_handling}}" readonly selected>{{chars.skill.animal_handling}}</option>
+                <option value="No">No</option>
+                <option value="Yes">Yes</option>
+            </select>
+        </div>
+		<div class="form-group m-1">
+			<label for="arcana">Arcana Proficiency:</label>
+			<select id="arcana" name="arcana">
+                <option value="{{chars.skill.arcana}}" readonly selected>{{chars.skill.arcana}}</option>
+                <option value="No">No</option>
+                <option value="Yes">Yes</option>
+            </select>
+        </div>
+		<div class="form-group m-1">
+			<label for="athletics">Athletics Proficiency:</label>
+			<select id="athletics" name="athletics">
+                <option value="{{chars.skill.athletics}}" readonly selected>{{chars.skill.athletics}}</option>
+                <option value="No">No</option>
+                <option value="Yes">Yes</option>
+            </select>
+        </div>
+		<div class="form-group m-1">
+			<label for="deception">Deception Proficiency:</label>
+			<select id="deception" name="deception">
+                <option value="{{chars.skill.deception}}" readonly selected>{{chars.skill.deception}}</option>
+                <option value="No">No</option>
+                <option value="Yes">Yes</option>
+            </select>
+        </div>
+		<div class="form-group m-1">
+			<label for="history">History Proficiency:</label>
+			<select id="history" name="history">
+                <option value="{{chars.skill.history}}" readonly selected>{{chars.skill.history}}</option>
+                <option value="No">No</option>
+                <option value="Yes">Yes</option>
+            </select>
+        </div>
+		<div class="form-group m-1">
+			<label for="insight">Insight Proficiency:</label>
+			<select id="insight" name="insight">
+                <option value="{{chars.skill.insight}}" readonly selected>{{chars.skill.insight}}</option>
+                <option value="No">No</option>
+                <option value="Yes">Yes</option>
+            </select>
+        </div>
+		<div class="form-group m-1">
+			<label for="intimidation">Intimidation Proficiency:</label>
+			<select id="intimidation" name="intimidation">
+                <option value="{{chars.skill.intimidation}}" readonly selected>{{chars.skill.intimidation}}</option>
+                <option value="No">No</option>
+                <option value="Yes">Yes</option>
+            </select>
+        </div>
+		<div class="form-group m-1">
+			<label for="investigation">Investigation Proficiency:</label>
+			<select id="investigation" name="investigation">
+                <option value="{{chars.skill.investigation}}" readonly selected>{{chars.skill.investigation}}</option>
+                <option value="No">No</option>
+                <option value="Yes">Yes</option>
+            </select>
+        </div>
+		<div class="form-group m-1">
+			<label for="medicine">Medicine Proficiency:</label>
+			<select id="medicine" name="medicine">
+                <option value="{{chars.skill.medicine}}" readonly selected>{{chars.skill.medicine}}</option>
+                <option value="No">No</option>
+                <option value="Yes">Yes</option>
+            </select>
+        </div>
+		<div class="form-group m-1">
+			<label for="nature">Nature Proficiency:</label>
+			<select id="nature" name="nature">
+                <option value="{{chars.skill.nature}}" readonly selected>{{chars.skill.nature}}</option>
+                <option value="No">No</option>
+                <option value="Yes">Yes</option>
+            </select>
+        </div>
+		<div class="form-group m-1">
+			<label for="perception">Perception Proficiency:</label>
+			<select id="perception" name="perception">
+                <option value="{{chars.skill.perception}}" readonly selected>{{chars.skill.perception}}</option>
+                <option value="No">No</option>
+                <option value="Yes">Yes</option>
+            </select>
+        </div>
+		<div class="form-group m-1">
+			<label for="performance">Performance Proficiency:</label>
+			<select id="performance" name="performance">
+                <option value="{{chars.skill.performance}}" readonly selected>{{chars.skill.perception}}</option>
+                <option value="No">No</option>
+                <option value="Yes">Yes</option>
+            </select>
+        </div>
+		<div class="form-group m-1">
+			<label for="persuasion">Persuasion Proficiency:</label>
+			<select id="persuasion" name="persuasion">
+                <option value="{{chars.skill.persuasion}}" readonly selected>{{chars.skill.persuasion}}</option>
+                <option value="No">No</option>
+                <option value="Yes">Yes</option>
+            </select>
+        </div>
+		<div class="form-group m-1">
+			<label for="religion">Religion Proficiency:</label>
+			<select id="religion" name="religion">
+                <option value="{{chars.skill.religion}}" readonly selected>{{chars.skill.religion}}</option>
+                <option value="No">No</option>
+                <option value="Yes">Yes</option>
+            </select>
+        </div>
+		<div class="form-group m-1">
+			<label for="slight_of_hand">Slight of Hand Proficiency:</label>
+			<select id="slight_of_hand" name="slight_of_hand">
+                <option value="{{chars.skill.survival}}" readonly selected>{{chars.skill.slight_of_hand}}</option>
+                <option value="No">No</option>
+                <option value="Yes">Yes</option>
+            </select>
+        </div>
+		<div class="form-group m-1">
+			<label for="stealth">Stealth Proficiency:</label>
+			<select id="stealth" name="stealth">
+                <option value="{{chars.skill.stealth}}" readonly selected>{{chars.skill.stealth}}</option>
+                <option value="No">No</option>
+                <option value="Yes">Yes</option>
+            </select>
+        </div>
+		<div class="form-group m-1">
+			<label for="survival">Survival Proficiency:</label>
+			<select id="survival" name="survival">
+                <option value="{{chars.skill.survival}}" readonly selected>{{chars.skill.survival}}</option>
+                <option value="No">No</option>
+                <option value="Yes">Yes</option>
+            </select>
+        </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group m-auto">
+                <h3 class="text-center">Spells</h3>
+                <p class="text-center"><small>This is for characters who have spells, 
+                please consult official resources for more information. 
+                More can be added later in character editing settings.</small></p>
+            </div>
+        </div>
+        <div class="form-row">
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="cantrip1">Cantrip: </label>
+			    <input class="form-control" type="text" id="cantrip1" name="cantrip1" value="{{chars.spells.cantrip.0}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="first1">1st: </label>
+			    <input class="form-control" type="text" id="first1" name="first1" value="{{chars.spells.first.0}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="second1">2nd: </label>
+			    <input class="form-control" type="text" id="second1" name="second1" value="{{chars.spells.second.0}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="third1">3rd: </label>
+			    <input class="form-control" type="text" id="third1" name="third1" value="{{chars.spells.third.0}}">
+            </div>
+        </div>
+        <div class="form-row">
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="cantrip2">Cantrip: </label>
+			    <input class="form-control" type="text" id="cantrip2" name="cantrip2" value="{{chars.spells.cantrip.1}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="first2">1st: </label>
+			    <input class="form-control" type="text" id="first2" name="first2" value="{{chars.spells.first.1}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="second2">2nd: </label>
+			    <input class="form-control" type="text" id="second2" name="second2" value="{{chars.spells.second.1}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="third2">3rd: </label>
+			    <input class="form-control" type="text" id="third2" name="third2" value="{{chars.spells.third.1}}">
+            </div>
+        </div>
+        <div class="form-row">
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="cantrip3">Cantrip: </label>
+			    <input class="form-control" type="text" id="cantrip3" name="cantrip3" value="{{chars.spells.cantrip.2}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="first3">1st: </label>
+			    <input class="form-control" type="text" id="firs3t" name="first3" value="{{chars.spells.first.2}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="second3">2nd: </label>
+			    <input class="form-control" type="text" id="second3" name="second3" value="{{chars.spells.second.2}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="third3">3rd: </label>
+			    <input class="form-control" type="text" id="third3" name="third3" value="{{chars.spells.third.2}}">
+            </div>
+        </div>
+        <div class="form-row">
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="cantrip4">Cantrip: </label>
+			    <input class="form-control" type="text" id="cantrip4" name="cantrip4" value="{{chars.spells.cantrip.3}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="first4">1st: </label>
+			    <input class="form-control" type="text" id="first4" name="first4" value="{{chars.spells.first.3}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="second4">2nd: </label>
+			    <input class="form-control" type="text" id="second4" name="second4" value="{{chars.spells.second.3}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="third4">3rd: </label>
+			    <input class="form-control" type="text" id="third4" name="third4" value="{{chars.spells.third.3}}">
+            </div>
+        </div>
+        <div class="form-row">
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="cantrip5">Cantrip: </label>
+			    <input class="form-control" type="text" id="cantrip5" name="cantrip5" value="{{chars.spells.cantrip.4}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="first5">1st: </label>
+			    <input class="form-control" type="text" id="first5" name="first5" value="{{chars.spells.first.4}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="second5">2nd: </label>
+			    <input class="form-control" type="text" id="second5" name="second5" value="{{chars.spells.second.4}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="third5">3rd: </label>
+			    <input class="form-control" type="text" id="third5" name="third5" value="{{chars.spells.third.4}}">
+            </div>
+        </div>
+        <div class="form-row">
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="cantrip6">Cantrip: </label>
+			    <input class="form-control" type="text" id="cantrip6" name="cantrip6" value="{{chars.spells.cantrip.5}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="first6">1st: </label>
+			    <input class="form-control" type="text" id="first6" name="first6" value="{{chars.spells.first.5}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="second6">2nd: </label>
+			    <input class="form-control" type="text" id="second6" name="second6" value="{{chars.spells.second.5}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="third6">3rd: </label>
+			    <input class="form-control" type="text" id="third6" name="third6" value="{{chars.spells.third.5}}">
+            </div>
+        </div>
+        <div class="form-row">
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="cantrip7">Cantrip: </label>
+			    <input class="form-control" type="text" id="cantrip7" name="cantrip7" value="{{chars.spells.cantrip.6}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="first7">1st: </label>
+			    <input class="form-control" type="text" id="first7" name="first7" value="{{chars.spells.first.6}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="second7">2nd: </label>
+			    <input class="form-control" type="text" id="second7" name="second7" value="{{chars.spells.second.6}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="third7">3rd: </label>
+			    <input class="form-control" type="text" id="third7" name="third7" value="{{chars.spells.third.6}}">
+            </div>
+        </div>
+        <div class="form-row">
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="cantrip8">Cantrip: </label>
+			    <input class="form-control" type="text" id="cantrip8" name="cantrip8" value="{{chars.spells.cantrip.7}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="first8">1st: </label>
+			    <input class="form-control" type="text" id="first8" name="first8" value="{{chars.spells.first.7}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="second8">2nd: </label>
+			    <input class="form-control" type="text" id="second8" name="second8" value="{{chars.spells.second.7}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="third8">3rd: </label>
+			    <input class="form-control" type="text" id="third8" name="third8" value="{{chars.spells.third.7}}">
+            </div>
+        </div>
+        <div class="form-row">
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="cantrip9">Cantrip: </label>
+			    <input class="form-control" type="text" id="cantrip9" name="cantrip9" value="{{chars.spells.cantrip.8}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="first9">1st: </label>
+			    <input class="form-control" type="text" id="first9" name="first9" value="{{chars.spells.first.8}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="second9">2nd: </label>
+			    <input class="form-control" type="text" id="second9" name="second9" value="{{chars.spells.second.8}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="third9">3rd: </label>
+			    <input class="form-control" type="text" id="third9" name="third9" value="{{chars.spells.third.8}}">
+            </div>
+        </div>
+        <div class="form-row">
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="cantrip10">Cantrip: </label>
+			    <input class="form-control" type="text" id="cantrip10" name="cantrip10" value="{{chars.spells.cantrip.9}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="first10">1st: </label>
+			    <input class="form-control" type="text" id="first10" name="first10" value="{{chars.spells.first.9}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="second10">2nd: </label>
+			    <input class="form-control" type="text" id="second10" name="second10" value="{{chars.spells.second.9}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="third10">3rd: </label>
+			    <input class="form-control" type="text" id="third10" name="third10" value="{{chars.spells.third.9}}">
+            </div>
+        </div>
+        <div class="form-row">
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="fourth1">4th: </label>
+			    <input class="form-control" type="text" id="fourth1" name="fourth1" value="{{chars.spells.fourth.0}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="fifth1">5th: </label>
+			    <input class="form-control" type="text" id="fifth1" name="fifth1" value="{{chars.spells.fifth.0}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="sixth1">6th: </label>
+			    <input class="form-control" type="text" id="sixth1" name="sixth1" value="{{chars.spells.sixth.0}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="seventh1">7th: </label>
+			    <input class="form-control" type="text" id="seventh1" name="seventh1" value="{{chars.spells.seventh.0}}">
+            </div>
+        </div>
+        <div class="form-row">
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="fourth2">4th: </label>
+			    <input class="form-control" type="text" id="fourth2" name="fourth2" value="{{chars.spells.fourth.1}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="fifth2">5th: </label>
+			    <input class="form-control" type="text" id="fifth2" name="fifth2" value="{{chars.spells.fifth.1}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="sixth2">6th: </label>
+			    <input class="form-control" type="text" id="sixth2" name="sixth2" value="{{chars.spells.sixth.1}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="seventh2">7th: </label>
+			    <input class="form-control" type="text" id="seventh2" name="seventh2" value="{{chars.spells.seventh.1}}">
+            </div>
+        </div>
+        <div class="form-row">
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="fourth3">4th: </label>
+			    <input class="form-control" type="text" id="fourth3" name="fourth3" value="{{chars.spells.fourth.2}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="fifth3">5th: </label>
+			    <input class="form-control" type="text" id="fifth3" name="fifth3" value="{{chars.spells.fifth.2}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="sixth3">6th: </label>
+			    <input class="form-control" type="text" id="sixth3" name="sixth3" value="{{chars.spells.sixth.2}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="seventh3">7th: </label>
+			    <input class="form-control" type="text" id="seventh3" name="seventh3" value="{{chars.spells.seventh.2}}">
+            </div>
+        </div>
+        <div class="form-row">
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="fourth4">4th: </label>
+			    <input class="form-control" type="text" id="fourth4" name="fourth4" value="{{chars.spells.fourth.3}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="fifth4">5th: </label>
+			    <input class="form-control" type="text" id="fifth4" name="fifth4" value="{{chars.spells.fifth.3}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="sixth4">6th: </label>
+			    <input class="form-control" type="text" id="sixth4" name="sixth4" value="{{chars.spells.sixth.3}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="seventh4">7th: </label>
+			    <input class="form-control" type="text" id="seventh4" name="seventh4" value="{{chars.spells.seventh.3}}">
+            </div>
+        </div>
+        <div class="form-row">
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="fourth5">4th: </label>
+			    <input class="form-control" type="text" id="fourth5" name="fourth5" value="{{chars.spells.fourth.4}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="fifth5">5th: </label>
+			    <input class="form-control" type="text" id="fifth5" name="fifth5" value="{{chars.spells.fifth.4}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="sixth5">6th: </label>
+			    <input class="form-control" type="text" id="sixth5" name="sixth5" value="{{chars.spells.sixth.4}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="seventh5">7th: </label>
+			    <input class="form-control" type="text" id="seventh5" name="seventh5" value="{{chars.spells.seventh.4}}">
+            </div>
+        </div>
+        <div class="form-row">
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="fourth6">4th: </label>
+			    <input class="form-control" type="text" id="fourth6" name="fourth6" value="{{chars.spells.fourth.5}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="fifth6">5th: </label>
+			    <input class="form-control" type="text" id="fifth6" name="fifth6" value="{{chars.spells.fifth.5}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="sixth6">6th: </label>
+			    <input class="form-control" type="text" id="sixth6" name="sixth6" value="{{chars.spells.sixth.5}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="seventh6">7th: </label>
+			    <input class="form-control" type="text" id="seventh6" name="seventh6" value="{{chars.spells.seventh.5}}">
+            </div>
+        </div>
+        <div class="form-row">
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="fourth7">4th: </label>
+			    <input class="form-control" type="text" id="fourth7" name="fourth7" value="{{chars.spells.fourth.6}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="fifth7">5th: </label>
+			    <input class="form-control" type="text" id="fifth7" name="fifth7" value="{{chars.spells.fifth.6}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="sixth7">6th: </label>
+			    <input class="form-control" type="text" id="sixth7" name="sixth7" value="{{chars.spells.sixth.6}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="seventh7">7th: </label>
+			    <input class="form-control" type="text" id="seventh7" name="seventh7" value="{{chars.spells.seventh.6}}">
+            </div>
+        </div>
+        <div class="form-row">
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="fourth8">4th: </label>
+			    <input class="form-control" type="text" id="fourth8" name="fourth8" value="{{chars.spells.fourth.7}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="fifth8">5th: </label>
+			    <input class="form-control" type="text" id="fifth8" name="fifth8" value="{{chars.spells.fifth.7}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="sixth8">6th: </label>
+			    <input class="form-control" type="text" id="sixth8" name="sixth8" value="{{chars.spells.sixth.7}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="seventh8">7th: </label>
+			    <input class="form-control" type="text" id="seventh8" name="seventh8" value="{{chars.spells.seventh.7}}">
+            </div>
+        </div>
+        <div class="form-row">
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="fourth9">4th: </label>
+			    <input class="form-control" type="text" id="fourth9" name="fourth9" value="{{chars.spells.fourth.8}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="fifth9">5th: </label>
+			    <input class="form-control" type="text" id="fifth9" name="fifth9" value="{{chars.spells.fifth.8}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="sixth9">6th: </label>
+			    <input class="form-control" type="text" id="sixth9" name="sixth9" value="{{chars.spells.sixth.8}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="seventh9">7th: </label>
+			    <input class="form-control" type="text" id="seventh9" name="seventh9" value="{{chars.spells.seventh.8}}">
+            </div>
+        </div>
+        <div class="form-row">
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="fourth10">4th: </label>
+			    <input class="form-control" type="text" id="fourth10" name="fourth10" value="{{chars.spells.fourth.9}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="fifth10">5th: </label>
+			    <input class="form-control" type="text" id="fifth10" name="fifth10" value="{{chars.spells.fifth.9}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="sixth10">6th: </label>
+			    <input class="form-control" type="text" id="sixth10" name="sixth10" value="{{chars.spells.sixth.9}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-3">
+			    <label for="seventh10">7th: </label>
+			    <input class="form-control" type="text" id="seventh10" name="seventh10" value="{{chars.spells.seventh.9}}">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-xl-1"></div>
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="eighth1">8th: </label>
+			    <input class="form-control" type="text" id="eighth1" name="eighth1" value="{{chars.spells.eighth.0}}">
+            </div>
+            <div class="col-xl-2"></div>
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="ninth1">9th: </label>
+			    <input class="form-control" type="text" id="ninth1" name="ninth1" value="{{chars.spells.ninth.0}}">
+            </div>
+            <div class="col-xl-1"></div>
+        </div>
+        <div class="form-row">
+            <div class="col-xl-1"></div>
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="eighth2">8th: </label>
+			    <input class="form-control" type="text" id="eighth2" name="eighth2" value="{{chars.spells.eighth.1}}">
+            </div>
+            <div class="col-xl-2"></div>
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="ninth2">9th: </label>
+			    <input class="form-control" type="text" id="ninth2" name="ninth2" value="{{chars.spells.ninth.1}}">
+            </div>
+            <div class="col-xl-1"></div>
+        </div>
+        <div class="form-row">
+            <div class="col-xl-1"></div>
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="eighth3">8th: </label>
+			    <input class="form-control" type="text" id="eighth3" name="eighth3" value="{{chars.spells.eighth.2}}">
+            </div>
+            <div class="col-xl-2"></div>
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="ninth3">9th: </label>
+			    <input class="form-control" type="text" id="ninth3" name="ninth3" value="{{chars.spells.ninth.2}}">
+            </div>
+            <div class="col-xl-1"></div>
+        </div>
+        <div class="form-row">
+            <div class="col-xl-1"></div>
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="eighth4">8th: </label>
+			    <input class="form-control" type="text" id="eighth4" name="eighth4" value="{{chars.spells.eighth.3}}">
+            </div>
+            <div class="col-xl-2"></div>
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="ninth4">9th: </label>
+			    <input class="form-control" type="text" id="ninth4" name="ninth4" value="{{chars.spells.ninth.3}}">
+            </div>
+            <div class="col-xl-1"></div>
+        </div>
+        <div class="form-row">
+            <div class="col-xl-1"></div>
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="eighth5">8th: </label>
+			    <input class="form-control" type="text" id="eighth5" name="eighth5" value="{{chars.spells.eighth.4}}">
+            </div>
+            <div class="col-xl-2"></div>
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="ninth5">9th: </label>
+			    <input class="form-control" type="text" id="ninth5" name="ninth5" value="{{chars.spells.ninth.4}}">
+            </div>
+            <div class="col-xl-1"></div>
+        </div>
+        <div class="form-row">
+            <div class="col-xl-1"></div>
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="eighth6">8th: </label>
+			    <input class="form-control" type="text" id="eighth6" name="eighth6" value="{{chars.spells.eighth.5}}">
+            </div>
+            <div class="col-xl-2"></div>
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="ninth6">9th: </label>
+			    <input class="form-control" type="text" id="ninth6" name="ninth6" value="{{chars.spells.ninth.5}}">
+            </div>
+            <div class="col-xl-1"></div>
+        </div>
+        <div class="form-row">
+            <div class="col-xl-1"></div>
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="eighth7">8th: </label>
+			    <input class="form-control" type="text" id="eighth7" name="eighth7" value="{{chars.spells.eighth.6}}">
+            </div>
+            <div class="col-xl-2"></div>
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="ninth7">9th: </label>
+			    <input class="form-control" type="text" id="ninth7" name="ninth7" value="{{chars.spells.ninth.6}}">
+            </div>
+            <div class="col-xl-1"></div>
+        </div>
+        <div class="form-row">
+            <div class="col-xl-1"></div>
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="eighth8">8th: </label>
+			    <input class="form-control" type="text" id="eighth8" name="eighth8" value="{{chars.spells.eighth.7}}">
+            </div>
+            <div class="col-xl-2"></div>
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="ninth8">9th: </label>
+			    <input class="form-control" type="text" id="ninth8" name="ninth8" value="{{chars.spells.ninth.7}}">
+            </div>
+            <div class="col-xl-1"></div>
+        </div>
+        <div class="form-row">
+            <div class="col-xl-1"></div>
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="eighth9">8th: </label>
+			    <input class="form-control" type="text" id="eighth9" name="eighth9" value="{{chars.spells.eighth.8}}">
+            </div>
+            <div class="col-xl-2"></div>
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="ninth9">9th: </label>
+			    <input class="form-control" type="text" id="ninth9" name="ninth9" value="{{chars.spells.ninth.8}}">
+            </div>
+            <div class="col-xl-1"></div>
+        </div>
+        <div class="form-row">
+            <div class="col-xl-1"></div>
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="eighth10">8th: </label>
+			    <input class="form-control" type="text" id="eighth10" name="eighth10" value="{{chars.spells.eighth.9}}">
+            </div>
+            <div class="col-xl-2"></div>
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="ninth10">9th: </label>
+			    <input class="form-control" type="text" id="ninth10" name="ninth5" value="{{chars.spells.ninth.9}}">
+            </div>
+            <div class="col-xl-1"></div>
+        </div>
+        <div class="form-row">
+            <div class="form-group m-auto">
+                <h3 class="text-center">Weapons, Armor and Tools</h3>
+                <p class="text-center"><small>This is for your characters weapons, armor and tools list.</small></p>
+            </div>
+        </div>
+        <div class="form-row">
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="weapon1">Weapon 1: </label>
+			    <input class="form-control" type="text" id="weapon1" name="weapon1" value="{{chars.item.weapons.0}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="armor1">Armor 1: </label>
+			    <input class="form-control" type="text" id="armor1" name="armor1" value="{{chars.item.armors.0}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="tool1">Tool 1: </label>
+			    <input class="form-control" type="text" id="tool1" name="tool1" value="{{chars.item.tools.0}}">
+            </div>
+        </div>
+        <div class="form-row">
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="weapon2">Weapon 2: </label>
+			    <input class="form-control" type="text" id="weapon2" name="weapon2" value="{{chars.item.weapons.1}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="armor2">Armor 2: </label>
+			    <input class="form-control" type="text" id="armor2" name="armor2" value="{{chars.item.armors.1}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="tool2">Tool 2: </label>
+			    <input class="form-control" type="text" id="tool2" name="tool2" value="{{chars.item.tools.1}}">
+            </div>
+        </div>
+        <div class="form-row">
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="weapon3">Weapon 3: </label>
+			    <input class="form-control" type="text" id="weapon3" name="weapon3" value="{{chars.item.weapons.2}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="armor3">Armor 3: </label>
+			    <input class="form-control" type="text" id="armor3" name="armor3" value="{{chars.item.armors.2}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="tool3">Tool 3: </label>
+			    <input class="form-control" type="text" id="tool3" name="tool3" value="{{chars.item.tools.3}}">
+            </div>
+        </div>
+        <div class="form-row">
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="weapon4">Weapon 4: </label>
+			    <input class="form-control" type="text" id="weapon4" name="weapon4" value="{{chars.item.weapons.3}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="armor4">Armor 4: </label>
+			    <input class="form-control" type="text" id="armor4" name="armor4" value="{{chars.item.armors.3}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="tool4">Tool 4: </label>
+			    <input class="form-control" type="text" id="tool4" name="tool4" value="{{chars.item.tools.3}}">
+            </div>
+        </div>
+        <div class="form-row">
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="weapon5">Weapon 5: </label>
+			    <input class="form-control" type="text" id="weapon5" name="weapon5" value="{{chars.item.weapons.4}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="armor5">Armor 5: </label>
+			    <input class="form-control" type="text" id="armor5" name="armor5" value="{{chars.item.armors.4}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="tool5">Tool 5: </label>
+			    <input class="form-control" type="text" id="tool5" name="tool5" value="{{chars.item.tools.4}}">
+            </div>
+        </div>
+        <div class="form-row">
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="weapon6">Weapon 6: </label>
+			    <input class="form-control" type="text" id="weapon6" name="weapon6" value="{{chars.item.weapons.5}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="armor6">Armor 6: </label>
+			    <input class="form-control" type="text" id="armor6" name="armor6" value="{{chars.item.armors.5}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="tool6">Tool 6: </label>
+			    <input class="form-control" type="text" id="tool6" name="tool6" value="{{chars.item.tools.5}}">
+            </div>
+        </div>
+        <div class="form-row">
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="weapon7">Weapon 7: </label>
+			    <input class="form-control" type="text" id="weapon7" name="weapon7" value="{{chars.item.weapons.6}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="armor7">Armor 7: </label>
+			    <input class="form-control" type="text" id="armor7" name="armor7" value="{{chars.item.armors.6}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="tool7">Tool 7: </label>
+			    <input class="form-control" type="text" id="tool7" name="tool7" value="{{chars.item.tools.6}}">
+            </div>
+        </div>
+        <div class="form-row">
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="weapon8">Weapon 8: </label>
+			    <input class="form-control" type="text" id="weapon8" name="weapon8" value="{{chars.item.weapons.7}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="armor8">Armor 8: </label>
+			    <input class="form-control" type="text" id="armor8" name="armor8" value="{{chars.item.armors.7}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="tool8">Tool 8: </label>
+			    <input class="form-control" type="text" id="tool8" name="tool8" value="{{chars.item.tools.7}}">
+            </div>
+        </div>
+        <div class="form-row">
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="weapon9">Weapon 9: </label>
+			    <input class="form-control" type="text" id="weapon9" name="weapon9" value="{{chars.item.weapons.8}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="armor9">Armor 9: </label>
+			    <input class="form-control" type="text" id="armor9" name="armor9" value="{{chars.item.armors.8}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="tool9">Tool 9: </label>
+			    <input class="form-control" type="text" id="tool9" name="tool9" value="{{chars.item.tools.8}}">
+            </div>
+        </div>
+        <div class="form-row">
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="weapon10">Weapon 10: </label>
+			    <input class="form-control" type="text" id="weapon10" name="weapon10" value="{{chars.item.weapons.9}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="armor10">Armor 10: </label>
+			    <input class="form-control" type="text" id="armor10" name="armor10" value="{{chars.item.armors.9}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="tool10">Tool 10: </label>
+			    <input class="form-control" type="text" id="tool10" name="tool10" value="{{chars.item.tools.9}}">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group m-auto">
+                <h3 class="text-center">Features and Feats</h3>
+                <p class="text-center"><small>This section is for character racial and class features, and this section is for feats that have been gained by the character.</small></p>
+            </div>
+        </div>
+        <div class="form-row">
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="class_features1">Class Feature 1: </label>
+			    <input class="form-control" type="text" id="class_features1" name="class_features1" value="{{chars.features.class_features.0}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="race_features1">Race Feature 1: </label>
+			    <input class="form-control" type="text" id="race_features1" name="race_features1" value="{{chars.features.race_features.0}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="feats1">Feat 1: </label>
+			    <input class="form-control" type="text" id="feats1" name="feats1" value="{{chars.features.feats.0}}">
+            </div>
+        </div>
+        <div class="form-row">
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="class_features2">Class Feature 2: </label>
+			    <input class="form-control" type="text" id="class_features2" name="class_features2" value="{{chars.features.class_features.1}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="race_features2">Race Feature 2: </label>
+			    <input class="form-control" type="text" id="race_features2" name="race_features2" value="{{chars.features.race_features.1}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="feats2">Feat 2: </label>
+			    <input class="form-control" type="text" id="feats2" name="feats2" value="{{chars.features.feats.1}}">
+            </div>
+        </div>
+        <div class="form-row">
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="class_features3">Class Feature 3: </label>
+			    <input class="form-control" type="text" id="class_features3" name="class_features3" value="{{chars.features.class_features.2}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="race_features3">Race Feature 3: </label>
+			    <input class="form-control" type="text" id="race_features3" name="race_features3" value="{{chars.features.race_features.2}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="feats3">Feat 3: </label>
+			    <input class="form-control" type="text" id="feats3" name="feats3" value="{{chars.features.feats.2}}">
+            </div>
+        </div>
+        <div class="form-row">
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="class_features4">Class Feature 4: </label>
+			    <input class="form-control" type="text" id="class_features4" name="class_features4" value="{{chars.features.class_features.3}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="race_features4">Race Feature 4: </label>
+			    <input class="form-control" type="text" id="race_features4" name="race_features4" value="{{chars.features.race_features.3}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="feats4">Feat 4: </label>
+			    <input class="form-control" type="text" id="feats4" name="feats4" value="{{chars.features.feats.3}}">
+            </div>
+        </div>
+        <div class="form-row">
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="class_features5">Class Feature 5: </label>
+			    <input class="form-control" type="text" id="class_features5" name="class_features5" value="{{chars.features.class_features.4}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="race_features5">Race Feature 5: </label>
+			    <input class="form-control" type="text" id="race_features5" name="race_features5" value="{{chars.features.race_features.4}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="feats5">Feat 5: </label>
+			    <input class="form-control" type="text" id="feats5" name="feats5" value="{{chars.features.feats.4}}">
+            </div>
+        </div>
+        <div class="form-row">
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="class_features6">Class Feature 6: </label>
+			    <input class="form-control" type="text" id="class_features6" name="class_features6" value="{{chars.features.class_features.5}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="race_features6">Race Feature 6: </label>
+			    <input class="form-control" type="text" id="race_features6" name="race_features6" value="{{chars.features.race_features.5}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-4" value="{{chars.features.feats.5}}">
+			    <label for="feats6">Feat 6: </label>
+			    <input class="form-control" type="text" id="feats6" name="feats6">
+            </div>
+        </div>
+        <div class="form-row">
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="class_features7">Class Feature 7: </label>
+			    <input class="form-control" type="text" id="class_features7" name="class_features7" value="{{chars.features.class_features.6}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="race_features7">Race Feature 7: </label>
+			    <input class="form-control" type="text" id="race_features7" name="race_features7" value="{{chars.features.race_features.6}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="feats7">Feat 7: </label>
+			    <input class="form-control" type="text" id="feats7" name="feats7" value="{{chars.features.feats.6}}">
+            </div>
+        </div>
+        <div class="form-row">
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="class_features8">Class Feature 8: </label>
+			    <input class="form-control" type="text" id="class_features8" name="class_features8" value="{{chars.features.class_features.7}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="race_features8">Race Feature 8: </label>
+			    <input class="form-control" type="text" id="race_features8" name="race_features8" value="{{chars.features.race_features.7}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="feats8">Feat 8: </label>
+			    <input class="form-control" type="text" id="feats8" name="feats8" value="{{chars.features.feats.7}}">
+            </div>
+        </div>
+        <div class="form-row">
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="class_features9">Class Feature 9: </label>
+			    <input class="form-control" type="text" id="class_features9" name="class_features9" value="{{chars.features.class_features.8}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="race_features9">Race Feature 9: </label>
+			    <input class="form-control" type="text" id="race_features9" name="race_features9" value="{{chars.features.race_features.8}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="feats9">Feat 9: </label>
+			    <input class="form-control" type="text" id="feats9" name="feats9" value="{{chars.features.feats.8}}">
+            </div>
+        </div>
+        <div class="form-row">
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="class_features10">Class Feature 10: </label>
+			    <input class="form-control" type="text" id="class_features10" name="class_features10" value="{{chars.features.class_features.9}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="race_features10">Race Feature 10: </label>
+			    <input class="form-control" type="text" id="race_features10" name="race_features10" value="{{chars.features.race_features.9}}">
+            </div>
+	        <div class="form-group d-flex justify-content-center col-xl-4">
+			    <label for="feats10">Feat 10: </label>
+			    <input class="form-control" type="text" id="feats10" name="feats10" value="{{chars.features.feats.9}}">
+            </div>
+        </div>
+        <div class="form-row d-flex justify-content-center">
+            <input type="submit" value="Update Character!">
+        </div>
+	</form>
+</div>
+{% endfor %}
+{% endblock %}
