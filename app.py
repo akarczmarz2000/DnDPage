@@ -3,9 +3,11 @@ import os
 import random
 from flask import Flask, render_template, request, redirect, url_for
 from flask_pymongo import PyMongo
+"""
 from os import path
 if path.exists("env.py"):
   import env 
+"""
 #Starts a version of flask and a connection to the database
 app = Flask(__name__)
 

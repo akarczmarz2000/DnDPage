@@ -30,6 +30,8 @@ Until the open button is pressed. --->
         <li><a href="#{{urls.char_id}}">{{urls.character_name}}</a></li>
         {% endfor %}
     </ul>
+  <a href="{{ url_for('search_url') }}">Search</a>
+    
 </div>
 <button id="openbtn" class="m-1 pt-1 sticky-top" onclick="openNav()">Open</button>
 <div id="main">
