@@ -394,7 +394,14 @@ programs like this as you would need to be officially licensed to have that info
 The only other noteworthy thing was that names using more than one word lost their capitalization when processed, 
 I reported the bug and it was promptly fixed. This report is by me -Matt Cox-, 
 I am a professional beta tester and have been playing D&D for around 30 years.
-2. Tester 2 Shakeira Joyce - I used the program and attempted to break it. 
+2. Tester 2 Shakeira Joyce - I was asked to test whether the program would work, 
+and to see if values of stats where calculated correctly in response to the stats I put in at creation.
+This all seemed to work well, I had no issues making a character except some areas were hard to understand what they 
+were for, but in reporting this back and start to create a character again it has been made clear what each section is for.
+When I view my character all stats where already calculated for me and checking the maths it seems to all be correct. The 
+program doesn't seem to account for certain bonuses like racial bonuses, class bonuses or feats but these can be added at the
+bottom of the character sheet and added not in the program. It works well as a simple character sheet but for more advanced characters
+it maybe lacking some of the necessities of higher level characters.
 3. Tester 3 Adam Langford - I used the program to see if I could find any errors in it, or to try and break the program, 
 I did this by using a variety of characters, numbers and symbols inside of any box meant for text, 
 to see what allowances there are for it, as well as testing the limits on the numbers that are supposed to be capped at specific values. 
@@ -408,6 +415,8 @@ I was unable to find any obvious issues that can break the program, at least by 
 4. I double checked the Procfile and requirement.txt that I created at the start of the program
 5. I have pushed the code to GitHub and Heroku in pushing it to GitHub
 6. I have checked to see if the server runs with the same functionality of the site without error
+
+After testing on the deployment all things seem to be running normally, no issues. Data can be created read, updated and deleted. The seach works as it should.
 
 ## Credits
 Acknowledgements
