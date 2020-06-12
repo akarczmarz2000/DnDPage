@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}{{name|capitalize}} - Character View{% endblock %}
+{% block title %}Search Results{% endblock %}
 {% block head %}
 {{ super() }}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
@@ -14,38 +14,55 @@ it is hidden by javascript and css.
 Until the open button is pressed. --->
 <div id="mySidenav" class="sidenav">
   <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-  <a href="{{ url_for('new_character', name=name) }}">New Character</a>
-  <a class="active" href="#">Characters</a>
+  <a href="{{ url_for('entry') }}">New Character</a>
+  <a class="active" href="#">Search</a>
     <ul>
         <li><a href="#top">Top</a></li>
         <!--- This creates a link for each character
-        that is found when finding the users characters. 
-        Then when displaying
+        that is found when searching. Then when displaying
         the characters a div with corrisponding char_id as the 
         divs id is created allowing users to jump to that 
-        characters sheet through the navigation--->       
+        characters sheet through the navigation--->
         {% for urls in url %}
         <li><a href="#{{urls.char_id}}">{{urls.character_name}}</a></li>
         {% endfor %}
     </ul>
-  <a href="{{ url_for('update_character', name=name) }}">Update</a>
-  <a href="{{ url_for('delete_page', name=name) }}">Delete</a>
-  <a href="{{ url_for('search_url') }}">Search</a>
 </div>
 <button id="openbtn" class="m-1 pt-1 sticky-top" onclick="openNav()">Open</button>
+<div class="row justify-content-center m-1">
+    <!--- This form is here to allow users to search something new
+    if there search doesn't yield any results or they want to 
+    search something new to look at--->
+	<form action="{{ url_for('search') }}" name="search" method="post">
+        <label for="search_category">Search by:</label><br>
+        <select class="form-control" id="search_category" name="search_category" required>
+		    <option value="" readonly selected>Choose Your Search Category</option>
+            <!--- This will ditermine the way 
+            the app.py searchs the database, i.e 
+            which find() code line it will use --->
+            <option value="race">Race</option>
+            <option value="class">Class</option>
+            <option value="user">Creator</option>
+        </select>
+		<label for="seach">Search Keyword:</label><br>
+		<input type="text" class="form-control" id="search" name="search" placeholder="Search" required><br>
+		<button type="submit" class="form-control" name="action">Search Builds!</button>
+    </form>
+</div>
 <!--- This displays the characters
-that are returned from the find method 
-in a character sheet format  --->
+that are returned from the search 
+in a character sheet format that is 
+used on the character.html page --->
 {% for chars in char%}
 <div id="main">
-<div class="row m-1">
+<div class="row m-1 m-1">
     <!--- This is the nav link div--->
     <div id="{{chars.char_id}}"></div>
     <!--- This will display the user and the name the user has made
     for the character --->
 	<h1 class="m-auto">{{chars.user|capitalize}} - {{chars.character_name}}</h1>
 </div>
-<div class="row m-1">
+<div class="row m-1 m-1">
 	<div class="col-xl-3 col-lg-4 col-sm-6 pr-0">
 		<ul class="list-group">
             <!--- This determines whether or not the character
@@ -3381,9 +3398,9 @@ in a character sheet format  --->
 					<th scope="col">9th</th>
 				</tr>
 			</thead>
-			<tbody>
             <!--- These are all the spells, the boxes are left black when rendering the
             character if the character doesn't have spells in that level --->
+			<tbody>
 				<tr>
 					<td>{{chars.spells.cantrip.0}}</td>
 					<td>{{chars.spells.first.0}}</td>
@@ -3609,14 +3626,6 @@ in a character sheet format  --->
 		</div>
 	</div>
 </div>
-<div class="row">
-<div class="col-xl-4"></div>
-<div class="col-xl-4">
-    <div class="d-flex justify-content-center">
-        <button><a href="{{ url_for('delete_page', name=name) }}">Delete Character</a></button>
-    </div>
-</div>
-<div class="col-xl-4"></div>
 </div>
 {% endfor %}
 </div>

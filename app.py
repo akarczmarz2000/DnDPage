@@ -1,3 +1,4 @@
+#Imports all the needed modules to make the program work
 import os
 import random
 from flask import Flask, render_template, request, redirect, url_for
@@ -5,7 +6,7 @@ from flask_pymongo import PyMongo
 from os import path
 if path.exists("env.py"):
   import env 
-
+#Starts a version of flask and a connection to the database
 app = Flask(__name__)
 
 app.config["MONGO_DBNAME"] = "DnDDatabase"
@@ -13,47 +14,107 @@ app.config["MONGO_URI"] = os.environ.get("MONGO_URI")
 
 mongo = PyMongo(app)
 
-
+#This is the first director the page opens on
 @app.route("/")
 @app.route("/entry")
 def entry():
     return render_template("entry.html")
 
-
+"""
+This response to the name entered on the entry page form,
+it works out whether the user has created any characters before.
+Then directs then to there characters if they have and to the 
+creation page if they haven't.
+"""
 @app.route("/user-enter", methods=["POST"])
 def user_enter():
     name = request.form["name"].lower()
     user = mongo.db.characters.find_one({"user": name})
     print(user)
     if user == None:
+        #This sets the value of the character number to one on the page so that the other navigation buttons the user can't use yet are hidden
         char_numb = 1
         return render_template("new_character.html", name=name, char_numb=char_numb, race=mongo.db.race.find(), classes=mongo.db.classes.find(),  cls=mongo.db.classes.find())
     else:
-        return render_template("character.html",  name=name, char=mongo.db.characters.find({'user': name}))
+        return render_template("character.html",  name=name, char=mongo.db.characters.find({'user': name}), url=mongo.db.characters.find({'user': name}))
 
+"""
+This response to a search being entered on the entry page
+or the search page. It checks the search category returned from the form
+to get the appropriate database search function, then the search put in the bar
+is ran through the database and send all results to the page for display.
+"""
+@app.route("/search", methods=["POST"])
+def search():
+    search = request.form["search"]
+    search_category = request.form["search_category"]
+    if search_category == "race":
+        """
+        This is capitalized so that accidental caps doesn't mess with the search. 
+        And so the database search works properly if the search is spelt right.
+        """
+        search = search.capitalize()
+        return render_template("search.html", char=mongo.db.characters.find({'race': search}), url=mongo.db.characters.find({'race': search}))
+    elif search_category == "class":
+        """
+        This is capitalized so that accidental caps doesn't mess with the search. 
+        And so the database search works properly if the search is spelt right.
+        """
+        search = search.capitalize()
+        return render_template("search.html", char=mongo.db.characters.find({'clss1': search}), url=mongo.db.characters.find({'clss1': search}))
+    elif search_category == "user":
+        """
+        This is capitalized so that accidental caps doesn't mess with the search. 
+        And so the database search works properly if the search is spelt right.
+        """
+        search = search.lower()
+        return render_template("search.html", char=mongo.db.characters.find({'user': search}), url=mongo.db.characters.find({'user': search}))
 
+"""
+This renders the search page from other pages 
+accessing it from the navigation instead of through a form
+"""
+@app.route("/search")
+def search_url():
+    return render_template("search.html")
+
+"""
+This renders the character page from other pages 
+accessing it from the navigation instead of through a form
+"""
 @app.route("/character/<name>")
 def character_url(name):
-    return render_template("character.html",  name=name, char=mongo.db.characters.find({'user': name}))
+    return render_template("character.html",  name=name, char=mongo.db.characters.find({'user': name}), url=mongo.db.characters.find({'user': name}))
 
-
+"""
+This renders the new character page from other pages 
+accessing it from the navigation instead of through a form
+"""
 @app.route("/new-character/<name>")
 def new_character(name):
     char_numb = 2
     return render_template("new_character.html", name=name, char_numb=char_numb, race=mongo.db.race.find(), classes=mongo.db.classes.find(),  cls=mongo.db.classes.find())
 
-
+"""
+This renders the update character page from other pages 
+accessing it from the navigation instead of through a form
+"""
 @app.route("/update-character/<name>")
 def update_character(name):
-    return render_template("update.html", name=name, race=mongo.db.race.find(), classes=mongo.db.classes.find(),  cls=mongo.db.classes.find(), char=mongo.db.characters.find({'user': name}))
+    return render_template("update.html", name=name, race=mongo.db.race.find(), classes=mongo.db.classes.find(),  cls=mongo.db.classes.find(), char=mongo.db.characters.find({'user': name}), url=mongo.db.characters.find({'user': name}))
 
-
+"""
+This take the response from the update page form
+and formats the data for the database, 
+then sends the data to the database to update the record
+"""
 @app.route("/character/<name>", methods=["POST"])
 def update(name):
+    #This identifies the character they want to change
     char_id = request.form["char_id"]
+    #This changes it's format type so it matchs the database
     char_id = float(char_id)
     user = request.form["username"].lower()
-    char_numb = request.form["char_numb"]
     character_name = request.form["character_name"]
     clss1 = request.form["class1"]
     clss2 = request.form["class2"]
@@ -197,6 +258,7 @@ def update(name):
     feats8 = request.form["feats8"]
     feats9 = request.form["feats9"]
     feats10 = request.form["feats10"]
+    #This is the format for the database
     character = { "$set": {
         "character_name": character_name,
         "clss1": clss1,
@@ -259,12 +321,18 @@ def update(name):
     }
     select = {"char_id": char_id}
     update = mongo.db.characters.update_one(select, character)
+    #This takes them back to there character page and loads the new updates
     return render_template("character.html",  name=user, char=mongo.db.characters.find({'user': user}))
 
-
+"""
+This take the response from the new character page form
+and formats the data for the database, 
+then sends the data to the database to add a new record
+"""
 @app.route("/character", methods=["POST"])
 def character():
-    char_id = random()
+    #This creates a random number to help identify individual character later
+    char_id = random.random()
     user = request.form["username"].lower()
     char_numb = request.form["char_numb"]
     character_name = request.form["character_name"]
@@ -301,6 +369,11 @@ def character():
     slight_of_hand = request.form["slight_of_hand"]
     stealth = request.form["stealth"]
     survival = request.form["survival"]
+    """
+    These are requested as individual
+    variables because of the way they are formated
+    on the database
+    """
     cantrip1 = request.form["cantrip1"]
     cantrip2 = request.form["cantrip2"]
     cantrip3 = request.form["cantrip3"]
@@ -351,6 +424,11 @@ def character():
     ninth3 = request.form["ninth3"]
     ninth4 = request.form["ninth4"]
     ninth5 = request.form["ninth5"]
+    """
+    These are requested as individual
+    variables because of the way they are formated
+    on the database
+    """
     weapon1 = request.form["weapon1"]
     weapon2 = request.form["weapon2"]
     weapon3 = request.form["weapon3"]
@@ -381,6 +459,11 @@ def character():
     tool8 = request.form["tool8"]
     tool9 = request.form["tool9"]
     tool10 = request.form["tool10"]
+    """
+    These are requested as individual
+    variables because of the way they are formated
+    on the database
+    """
     class_features1 = request.form["class_features1"]
     class_features2 = request.form["class_features2"]
     class_features3 = request.form["class_features3"]
@@ -411,6 +494,7 @@ def character():
     feats8 = request.form["feats8"]
     feats9 = request.form["feats9"]
     feats10 = request.form["feats10"]
+    #This is the format for the database
     character = {
         "char_id": float(char_id),
         "user": user,
@@ -474,7 +558,33 @@ def character():
         }
     }
     connection = mongo.db.characters.insert_one(character)
+    #This displays the users new character to them
     return render_template("character.html",  name=user, char=mongo.db.characters.find({'user': user})) 
+
+"""
+This renders the delete page from other pages 
+accessing it from the navigation or button
+"""
+@app.route("/delete/<name>")
+def delete_page(name):
+    return render_template("delete.html",  name=name, char=mongo.db.characters.find({'user': name}), url=mongo.db.characters.find({'user': name})) 
+
+"""
+The basic information about a character
+is displayed on the delete page by the
+delete_page function, the user then selects
+the one they want to delete by clicking the delete
+button under that characters data. This take that data
+and deletes the corrisponding character, then redirects them
+to confirmation page where they can navigate to the rest of the page
+"""
+@app.route("/delete-confirmation", methods=["POST"])
+def delete():
+    char_id = request.form["char_id"]
+    char_id = float(char_id)
+    user = request.form["username"].lower()
+    delete = mongo.db.characters.delete_one({"char_id": char_id})
+    return render_template("confirmation.html", name=user)
 
 
 if __name__ == "__main__":

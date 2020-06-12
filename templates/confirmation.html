@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Welcome {{name}}!{% endblock %}
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<script src="{{url_for('static', filename='sidenav.js')}}"></script>
+{% endblock %}
+{% block content %}
+<!--- This is the side navigation,
+it is hidden by javascript and css.
+Until the open button is pressed. --->
+<div id="mySidenav" class="sidenav">
+  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+  <a href="{{ url_for('new_character', name=name) }}">New Character</a>
+  <a href="{{ url_for('character_url', name=name) }}">Characters</a>
+  <a href="{{ url_for('update', name=name) }}">Update</a>
+  <a href="{{ url_for('delete_page', name=name) }}">Delete</a>
+</div>
+<button id="openbtn" class="m-1 pt-1 sticky-top" onclick="openNav()">Open</button>
+<div id="main">
+    <!--- This is a simple confirmation message 
+    to let the user know the character has been
+     deleted and to help them know how to proceed 
+     from this point --->
+    <div class="row m-1">
+	    <h1 class="m-auto text-center">All Complete - The Character has been removed {{name|capitalize}}</h1>
+    </div>
+    <div class="row m-1">
+        <h4 class="m-auto text-center">Select one of the options from the navigation to proceed</h4>
+    </div>
+</div>
+{% endblock %}

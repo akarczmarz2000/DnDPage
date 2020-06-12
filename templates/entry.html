@@ -4,14 +4,38 @@
     {{ super() }}
 {% endblock %}
 {% block content %}
-<div class="row m-1 m-1">
-	<h1 class="text-center">Welcome! - Enter your name please</h1>
+<div class="row justify-content-center m-1">
+	<h1>Welcome!</h1>
 </div>
-<div class="row m-1 m-1">
+<div class="row justify-content-center m-1">
+	<h4>Enter your name or search the character idea from other users</h4>
+</div>
+<div class="row justify-content-center m-1">
 	<form action="{{ url_for('user_enter') }}" name="user_enter" method="post">
+        <!--- This allows the user to input there disired name 
+        or renter the site with there choosen one, the cap doesn't matter but spelling does --->
 		<label for="name">Name:</label><br>
-		<input type="text" id="name" name="name" placeholder="Name"><br>
-		<button type="submit" name="action">Enter Site!</button>
-</form>
+		<input type="text" class="form-control" id="name" name="name" placeholder="Name" required><br>
+		<button type="submit" class="form-control" name="action">Enter Site!</button>
+    </form>
+</div>
+<div class="row justify-content-center m-1">
+	<form action="{{ url_for('search') }}" name="search" method="post">
+        <!--- This allow the user to search the characters made by race,
+         class or user and with a keyword corrisponding to there choosen category--->
+        <label for="search_category">Search by:</label><br>
+        <!--- This allows them to choose there category which selects the corrisponding mongodb find code in the app.py --->
+        <select class="form-control" id="search_category" name="search_category" required>
+		    <option value="" readonly selected>Choose Your Search Category</option>
+            <option value="race">Race</option>
+            <option value="class">Class</option>
+            <option value="user">Creator</option>
+        </select>
+        <!--- This allows the user to enter the keyword that they want to 
+        search there category with, cap doesn't matter but spelling does--->
+		<label for="seach">Search Keyword:</label><br>
+		<input type="text" class="form-control" id="search" name="search" placeholder="Search" required><br>
+		<button type="submit" class="form-control" name="action">Search Builds!</button>
+    </form>
 </div>
 {% endblock %}

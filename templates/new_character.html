@@ -6,97 +6,129 @@
 <script src="{{url_for('static', filename='sidenav.js')}}"></script>
 {% endblock %}
 {% block content %}
+<!--- This is the side navigation,
+it is hidden by javascript and css.
+Until the open button is pressed. --->
 <div id="mySidenav" class="sidenav">
   <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+  <a class="active" href="#">New Character</a>
+  <!--- This checks whether or not the char_numb variable is 2 or higher, 
+  it is set to 1 on first entry to hide these to avoid errors --->
   {% if char_numb >= 2 %}
     <a  href="{{ url_for('character_url', name=name) }}">Characters</a>
     <a href="{{ url_for('update_character', name=name) }}">Update</a>
+    <a href="{{ url_for('delete_page', name=name) }}">Delete</a>
   {% endif %}
-  <a class="active" href="#">New Character</a>
+  <a href="{{ url_for('search_url') }}">Search</a>
 </div>
-<button class="m-1" onclick="openNav()">Open</button>
+<button id="openbtn" class="m-1 pt-1 sticky-top" onclick="openNav()">Open</button>
 <div id="main">
-<div class="row m-1 m-1">
+<div class="row justify-content-center m-1">
 	<h1 class="text-center">Welcome! - Create your character!</h1>
 </div>
-<div class="row m-1 m-1">
+<div class="row justify-content-center m-1">
 	<p>If you require information not supplied here for the creating of your character, please use an official retailer
 		to obtain a copy
 		of the books. We will not supply any information about specifics as this would be a copyright infringement,
 		thank you.</p>
 	<form action="{{ url_for('character') }}" name="character" method="post" class="m-1">
     <div class="form-row">
-		<div class="form-group col-xl-4">
+		<div class="form-group col-4">
+            <!--- This will have the users name that they inputted at the entry page, 
+            it is passed through all the page link except search so will still be 
+            set to this when navigating from the other pages --->
 			<label for="username">Users Name:</label>
-			<input type="text" class="form-control" id="username" name="username" value="{{name}}">
+			<input type="text" class="form-control" id="username" name="username" value="{{name}}" required>
         </div>
-        <div class="form-group col-xl-4">
+        <div class="form-group col-4">
+            <!--- This is set to one on first entry and two once a character is made, 
+            I would like this to increase by one for each new charater 
+            but at the moment this is done manually after the first two --->
 			<label for="char_numb">Character Number:</label>
-			<input type="text" class="form-control" id="char_numb" name="char_numb" value="{{char_numb}}">
+			<input type="number" step="1" min="1" class="form-control" id="char_numb" name="char_numb" value="{{char_numb}}" required>
         </div>
-		<div class="form-group col-xl-4">
+		<div class="form-group col-4">
+            <!--- This allows the user to write the 
+            name the user has choosen for the character --->
 			<label for="character_name">Character Name:</label>
-			<input type="text" class="form-control" id="character_name" name="character_name">
+			<input type="text" class="form-control" id="character_name" name="character_name" required>
         </div>
     </div>
     <div class="form-row">
-		<div class="form-group col-xl-4">
+		<div class="form-group col-4">
 			<label for="class">Class:</label>
-			<select class="form-control" id="class1" name="class1">
+            <!--- This will allow the user to select there first class, which is required --->
+			<select class="form-control" id="class1" name="class1" required>
                 <option value="" disabled selected>Choose Class</option>
+                <!--- This iterates through all the classes and creates a select option for each --->
                 {% for class in classes%}
                     <option name="class" value="{{class.class}}">{{class.class}}</option>
                 {% endfor %}
             </select>
+            <!--- This will allow the user to select there second class, 
+            and if left blank will displays an empty box as defult option
+            on the character sheet --->
             <select class="form-control" id="class2" name="class2">
-                <option value="" disabled selected>Choose Class</option>
+                <option value=" " readonly selected>Choose Class</option>
+                <!--- This iterates through all the classes and creates a select option for each --->
                 {% for class in cls%}
                     <option name="class2" value="{{class.class}}">{{class.class}}</option>
                 {% endfor %}
             </select>
             <p><small>This is for later stage characters who have choosen to multiclass.</small></p>
 		</div>
-		<div class="form-group col-xl-4">
+		<div class="form-group col-4">
+            <!--- This allows the user to input there first classes specialisation, if it has one --->
 			<label for="subclass1">Class Specialisation:</label>
 			<input class="form-control" type="text" id="subclass1" name="subclass1">
 			<p><small>This is for later stage characters who have choosen a class specialisation.</small></p>
 		</div>
-        <div class="form-group col-xl-4">
+        <div class="form-group col-4">
+            <!--- This allows the user to input there second classes specialisation, if it has one  --->
 			<label for="subclass2">Secondary Class Specialisation:</label>
 			<input class="form-control" type="text" id="subclass2" name="subclass2">
 			<p><small>This is for later stage characters who have choosen a class specialisation.</small></p>
 		</div>
         </div>
         <div class="form-row">
-        <div class="form-group col-xl-3">
+        <div class="form-group col-3">
+            <!--- This will allow the user to set characters level --->
 			<label for="level">Level:</label>
-			<input class="form-control" type="text" id="level" name="level">
+			<input class="form-control" type="number" step="1" min="1" max="20" id="level" name="level" required>
         </div>
-        <div class="form-group col-xl-3">
+        <div class="form-group col-3">
+            <!--- This will allow the user to set the individual level for each 
+            class if they don't have a secondary class
+            this many not be filled in and will have a / in instead --->
 			<label for="subclass_level">Individual Class Level:</label>
-			<input class="form-control" type="text" id="subclass_level" name="subclass_level">
+			<input class="form-control" type="text" id="subclass_level" name="subclass_level" value="/">
             <p><small>This is the split you have choosen for you multiclass levels, main class/secondary class.</small></p>
         </div>
-		<div class="form-group col-xl-2">
+		<div class="form-group col-2">
 			<label for="race">Race:</label>
-			<select class="form-control" id="race" name="race">
+			<select class="form-control" id="race" name="race" required>
                 <option value="" disabled selected>Choose Race</option>
+                <!--- This will iterate through all the races and create
+                a select option for each race --->
                 {% for race in race%}
                     <option value="{{race.race}}">{{race.race}}</option>
                 {% endfor %}
             </select>
 		</div>
-		<div class="form-group col-xl-2">
+		<div class="form-group col-2">
+            <!--- This will allow the user to 
+            select the characters gender --->
 			<label for="gender">Gender:</label>
-			<select class="form-control" id="gender" name="gender">
-                <option value="female">Female</option>
-                <option value="male">Male</option>
-                <option value="other">Other</option>
+			<select class="form-control" id="gender" name="gender" required>
+                <option value="Female">Female</option>
+                <option value="Male">Male</option>
+                <option value="Other">Other</option>
             </select>
 		</div>
-		<div class="form-group col-xl-2">
+		<div class="form-group col-2">
+            <!--- This will allow the user to set the characters hitpoints --->
 			<label for="hit_points">Hit Points:</label>
-			<input class="form-control" type="text" id="hit_points" name="hit_points">
+			<input class="form-control" type="number" step="1" min="1" max="380" id="hit_points" name="hit_points" required>
         </div>
         </div>
         <div class="form-row">
@@ -106,154 +138,178 @@
             </div>
         </div>
         <div class="form-row">
-		<div class="form-group d-flex justify-content-center col-xl-4">
+		<div class="form-group d-flex justify-content-center col-4">
+            <!--- This allows the user to set there strength stat at a max of 20 and min of 3 --->
 		    <label for="strength">Strength:</label>
-	        <input class="form-control" type="text" id="strength" name="strength">
+	        <input class="form-control" type="number" step="1" min="3" max="20" id="strength" name="strength" required>
         </div>
-		<div class="form-group d-flex justify-content-center col-xl-4">
+		<div class="form-group d-flex justify-content-center col-4">
+            <!--- This allows the user to set there dexterity stat at a max of 20 and min of 3 --->
 			<label for="dexterity">Dexterity:</label>
-			<input class="form-control" type="text" id="dexterity" name="dexterity">
+			<input class="form-control" type="number" step="1" min="3" max="20" id="dexterity" name="dexterity" required>
         </div>
-		<div class="form-group d-flex justify-content-center col-xl-4">
+		<div class="form-group d-flex justify-content-center col-4">
+            <!--- This allows the user to set there constitution stat at a max of 20 and min of 3 --->
 			<label for="constitution">Constitution:</label>
-			<input class="form-control" type="text" id="constitution" name="constitution">
+			<input class="form-control" type="number" step="1" min="3" max="20" id="constitution" name="constitution" required>
         </div>
-		<div class="form-group d-flex justify-content-center col-xl-4">
+		<div class="form-group d-flex justify-content-center col-4">
+            <!--- This allows the user to set there intelligence stat at a max of 20 and min of 3 --->
 			<label for="intelligence">Intelligence:</label>
-			<input class="form-control" type="text" id="intelligence" name="intelligence">
+			<input class="form-control" type="number" step="1" min="3" max="20" id="intelligence" name="intelligence" required>
         </div>
-		<div class="form-group d-flex justify-content-center col-xl-4">
+		<div class="form-group d-flex justify-content-center col-4">
+            <!--- This allows the user to set there wisdom stat at a max of 20 and min of 3 --->
 			<label for="wisdom">Wisdom:</label>
-			<input class="form-control" type="text" id="wisdom" name="wisdom">
+			<input class="form-control" type="number" step="1" min="3" max="20" id="wisdom" name="wisdom" required>
         </div>
-		<div class="form-group d-flex justify-content-center col-xl-4">
+		<div class="form-group d-flex justify-content-center col-4">
+            <!--- This allows the user to set there charisma stat at a max of 20 and min of 3 --->
 			<label for="charisma">Charisma:</label>
-			<input class="form-control" type="text" id="charisma" name="charisma">
+			<input class="form-control" type="number" step="1" min="3" max="20" id="charisma" name="charisma" required>
         </div>
         </div>
         <div class="form-row">
-		<div class="form-group m-1">
+		<div class="form-group d-flex justify-content-center col-4">
+            <!--- This allows user to select if they have a proficiency in the skill  --->
 			<label for="acrobatics">Acrobatics Proficiency:</label>
-			<select id="acrobatics" name="acrobatics">
+			<select id="acrobatics" name="acrobatics" required>
                 <option value="No">No</option>
                 <option value="Yes">Yes</option>
             </select>
         </div>
-		<div class="form-group m-1">
+		<div class="form-group d-flex justify-content-center col-4">
+            <!--- This allows user to select if they have a proficiency in the skill  --->
 			<label for="animal_handling">Animal Handling Proficiency:</label>
-			<select id="animal_handling" name="animal_handling">
+			<select id="animal_handling" name="animal_handling" required>
                 <option value="No">No</option>
                 <option value="Yes">Yes</option>
             </select>
         </div>
-		<div class="form-group m-1">
+		<div class="form-group d-flex justify-content-center col-4">
+            <!--- This allows user to select if they have a proficiency in the skill  --->
 			<label for="arcana">Arcana Proficiency:</label>
-			<select id="arcana" name="arcana">
+			<select id="arcana" name="arcana" required>
                 <option value="No">No</option>
                 <option value="Yes">Yes</option>
             </select>
         </div>
-		<div class="form-group m-1">
+		<div class="form-group d-flex justify-content-center col-4">
+            <!--- This allows user to select if they have a proficiency in the skill  --->
 			<label for="athletics">Athletics Proficiency:</label>
-			<select id="athletics" name="athletics">
+			<select id="athletics" name="athletics" required>
                 <option value="No">No</option>
                 <option value="Yes">Yes</option>
             </select>
         </div>
-		<div class="form-group m-1">
+		<div class="form-group d-flex justify-content-center col-4">
+            <!--- This allows user to select if they have a proficiency in the skill  --->
 			<label for="deception">Deception Proficiency:</label>
-			<select id="deception" name="deception">
+			<select id="deception" name="deception" required>
                 <option value="No">No</option>
                 <option value="Yes">Yes</option>
             </select>
         </div>
-		<div class="form-group m-1">
+		<div class="form-group d-flex justify-content-center col-4">
+            <!--- This allows user to select if they have a proficiency in the skill  --->
 			<label for="history">History Proficiency:</label>
-			<select id="history" name="history">
+			<select id="history" name="history" required>
                 <option value="No">No</option>
                 <option value="Yes">Yes</option>
             </select>
         </div>
-		<div class="form-group m-1">
+		<div class="form-group d-flex justify-content-center col-4">
+            <!--- This allows user to select if they have a proficiency in the skill  --->
 			<label for="insight">Insight Proficiency:</label>
-			<select id="insight" name="insight">
+			<select id="insight" name="insight" required>
                 <option value="No">No</option>
                 <option value="Yes">Yes</option>
             </select>
         </div>
-		<div class="form-group m-1">
+		<div class="form-group d-flex justify-content-center col-4">
+            <!--- This allows user to select if they have a proficiency in the skill  --->
 			<label for="intimidation">Intimidation Proficiency:</label>
-			<select id="intimidation" name="intimidation">
+			<select id="intimidation" name="intimidation" required>
                 <option value="No">No</option>
                 <option value="Yes">Yes</option>
             </select>
         </div>
-		<div class="form-group m-1">
+		<div class="form-group d-flex justify-content-center col-4">
+            <!--- This allows user to select if they have a proficiency in the skill  --->
 			<label for="investigation">Investigation Proficiency:</label>
-			<select id="investigation" name="investigation">
+			<select id="investigation" name="investigation" required>
                 <option value="No">No</option>
                 <option value="Yes">Yes</option>
             </select>
         </div>
-		<div class="form-group m-1">
+		<div class="form-group d-flex justify-content-center col-4">
+            <!--- This allows user to select if they have a proficiency in the skill  --->
 			<label for="medicine">Medicine Proficiency:</label>
-			<select id="medicine" name="medicine">
+			<select id="medicine" name="medicine" required>
                 <option value="No">No</option>
                 <option value="Yes">Yes</option>
             </select>
         </div>
-		<div class="form-group m-1">
+		<div class="form-group d-flex justify-content-center col-4">
+            <!--- This allows user to select if they have a proficiency in the skill  --->
 			<label for="nature">Nature Proficiency:</label>
-			<select id="nature" name="nature">
+			<select id="nature" name="nature" required>
                 <option value="No">No</option>
                 <option value="Yes">Yes</option>
             </select>
         </div>
-		<div class="form-group m-1">
+		<div class="form-group d-flex justify-content-center col-4">
+            <!--- This allows user to select if they have a proficiency in the skill  --->
 			<label for="perception">Perception Proficiency:</label>
-			<select id="perception" name="perception">
+			<select id="perception" name="perception" required>
                 <option value="No">No</option>
                 <option value="Yes">Yes</option>
             </select>
         </div>
-		<div class="form-group m-1">
+		<div class="form-group d-flex justify-content-center col-4">
+            <!--- This allows user to select if they have a proficiency in the skill  --->
 			<label for="performance">Performance Proficiency:</label>
-			<select id="performance" name="performance">
+			<select id="performance" name="performance" required>
                 <option value="No">No</option>
                 <option value="Yes">Yes</option>
             </select>
         </div>
-		<div class="form-group m-1">
+		<div class="form-group d-flex justify-content-center col-4">
+            <!--- This allows user to select if they have a proficiency in the skill  --->
 			<label for="persuasion">Persuasion Proficiency:</label>
-			<select id="persuasion" name="persuasion">
+			<select id="persuasion" name="persuasion" required>
                 <option value="No">No</option>
                 <option value="Yes">Yes</option>
             </select>
         </div>
-		<div class="form-group m-1">
+		<div class="form-group d-flex justify-content-center col-4">
+            <!--- This allows user to select if they have a proficiency in the skill  --->
 			<label for="religion">Religion Proficiency:</label>
-			<select id="religion" name="religion">
+			<select id="religion" name="religion" required>
                 <option value="No">No</option>
                 <option value="Yes">Yes</option>
             </select>
         </div>
-		<div class="form-group m-1">
+		<div class="form-group d-flex justify-content-center col-4">
+            <!--- This allows user to select if they have a proficiency in the skill  --->
 			<label for="slight_of_hand">Slight of Hand Proficiency:</label>
-			<select id="slight_of_hand" name="slight_of_hand">
+			<select id="slight_of_hand" name="slight_of_hand" required>
                 <option value="No">No</option>
                 <option value="Yes">Yes</option>
             </select>
         </div>
-		<div class="form-group m-1">
+		<div class="form-group d-flex justify-content-center col-4">
+            <!--- This allows user to select if they have a proficiency in the skill  --->
 			<label for="stealth">Stealth Proficiency:</label>
-			<select id="stealth" name="stealth">
+			<select id="stealth" name="stealth" required>
                 <option value="No">No</option>
                 <option value="Yes">Yes</option>
             </select>
         </div>
-		<div class="form-group m-1">
+		<div class="form-group d-flex justify-content-center col-4">
+            <!--- This allows user to select if they have a proficiency in the skill  --->
 			<label for="survival">Survival Proficiency:</label>
-			<select id="survival" name="survival">
+			<select id="survival" name="survival" required>
                 <option value="No">No</option>
                 <option value="Yes">Yes</option>
             </select>
@@ -261,6 +317,8 @@
         </div>
         <div class="form-row">
             <div class="form-group m-auto">
+                <!--- This will allow the user to enter all the spells 
+                that the character will have --->
                 <h3 class="text-center">Spells</h3>
                 <p class="text-center"><small>This is for characters who have spells, 
                 please consult official resources for more information. 
@@ -268,249 +326,249 @@
             </div>
         </div>
         <div class="form-row">
-	        <div class="form-group d-flex justify-content-center col-xl-3">
+	        <div class="form-group d-flex justify-content-center col-3">
 			    <label for="cantrip1">Cantrip: </label>
 			    <input class="form-control" type="text" id="cantrip1" name="cantrip1">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-3">
+	        <div class="form-group d-flex justify-content-center col-3">
 			    <label for="first1">1st: </label>
 			    <input class="form-control" type="text" id="first1" name="first1">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-3">
+	        <div class="form-group d-flex justify-content-center col-3">
 			    <label for="second1">2nd: </label>
 			    <input class="form-control" type="text" id="second1" name="second1">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-3">
+	        <div class="form-group d-flex justify-content-center col-3">
 			    <label for="third1">3rd: </label>
 			    <input class="form-control" type="text" id="third1" name="third1">
             </div>
         </div>
         <div class="form-row">
-	        <div class="form-group d-flex justify-content-center col-xl-3">
+	        <div class="form-group d-flex justify-content-center col-3">
 			    <label for="cantrip2">Cantrip: </label>
 			    <input class="form-control" type="text" id="cantrip2" name="cantrip2">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-3">
+	        <div class="form-group d-flex justify-content-center col-3">
 			    <label for="first2">1st: </label>
 			    <input class="form-control" type="text" id="first2" name="first2">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-3">
+	        <div class="form-group d-flex justify-content-center col-3">
 			    <label for="second2">2nd: </label>
 			    <input class="form-control" type="text" id="second2" name="second2">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-3">
+	        <div class="form-group d-flex justify-content-center col-3">
 			    <label for="third2">3rd: </label>
 			    <input class="form-control" type="text" id="third2" name="third2">
             </div>
         </div>
         <div class="form-row">
-	        <div class="form-group d-flex justify-content-center col-xl-3">
+	        <div class="form-group d-flex justify-content-center col-3">
 			    <label for="cantrip3">Cantrip: </label>
 			    <input class="form-control" type="text" id="cantrip3" name="cantrip3">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-3">
+	        <div class="form-group d-flex justify-content-center col-3">
 			    <label for="first3">1st: </label>
 			    <input class="form-control" type="text" id="firs3t" name="first3">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-3">
+	        <div class="form-group d-flex justify-content-center col-3">
 			    <label for="second3">2nd: </label>
 			    <input class="form-control" type="text" id="second3" name="second3">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-3">
+	        <div class="form-group d-flex justify-content-center col-3">
 			    <label for="third3">3rd: </label>
 			    <input class="form-control" type="text" id="third3" name="third3">
             </div>
         </div>
         <div class="form-row">
-	        <div class="form-group d-flex justify-content-center col-xl-3">
+	        <div class="form-group d-flex justify-content-center col-3">
 			    <label for="cantrip4">Cantrip: </label>
 			    <input class="form-control" type="text" id="cantrip4" name="cantrip4">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-3">
+	        <div class="form-group d-flex justify-content-center col-3">
 			    <label for="first4">1st: </label>
 			    <input class="form-control" type="text" id="first4" name="first4">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-3">
+	        <div class="form-group d-flex justify-content-center col-3">
 			    <label for="second4">2nd: </label>
 			    <input class="form-control" type="text" id="second4" name="second4">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-3">
+	        <div class="form-group d-flex justify-content-center col-3">
 			    <label for="third4">3rd: </label>
 			    <input class="form-control" type="text" id="third4" name="third4">
             </div>
         </div>
         <div class="form-row">
-	        <div class="form-group d-flex justify-content-center col-xl-3">
+	        <div class="form-group d-flex justify-content-center col-3">
 			    <label for="cantrip5">Cantrip: </label>
 			    <input class="form-control" type="text" id="cantrip5" name="cantrip5">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-3">
+	        <div class="form-group d-flex justify-content-center col-3">
 			    <label for="first5">1st: </label>
 			    <input class="form-control" type="text" id="first5" name="first5">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-3">
+	        <div class="form-group d-flex justify-content-center col-3">
 			    <label for="second5">2nd: </label>
 			    <input class="form-control" type="text" id="second5" name="second5">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-3">
+	        <div class="form-group d-flex justify-content-center col-3">
 			    <label for="third5">3rd: </label>
 			    <input class="form-control" type="text" id="third5" name="third5">
             </div>
         </div>
         <div class="form-row">
-	        <div class="form-group d-flex justify-content-center col-xl-3">
+	        <div class="form-group d-flex justify-content-center col-3">
 			    <label for="fourth1">4th: </label>
 			    <input class="form-control" type="text" id="fourth1" name="fourth1">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-3">
+	        <div class="form-group d-flex justify-content-center col-3">
 			    <label for="fifth1">5th: </label>
 			    <input class="form-control" type="text" id="fifth1" name="fifth1">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-3">
+	        <div class="form-group d-flex justify-content-center col-3">
 			    <label for="sixth1">6th: </label>
 			    <input class="form-control" type="text" id="sixth1" name="sixth1">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-3">
+	        <div class="form-group d-flex justify-content-center col-3">
 			    <label for="seventh1">7th: </label>
 			    <input class="form-control" type="text" id="seventh1" name="seventh1">
             </div>
         </div>
         <div class="form-row">
-	        <div class="form-group d-flex justify-content-center col-xl-3">
+	        <div class="form-group d-flex justify-content-center col-3">
 			    <label for="fourth2">4th: </label>
 			    <input class="form-control" type="text" id="fourth2" name="fourth2">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-3">
+	        <div class="form-group d-flex justify-content-center col-3">
 			    <label for="fifth2">5th: </label>
 			    <input class="form-control" type="text" id="fifth2" name="fifth2">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-3">
+	        <div class="form-group d-flex justify-content-center col-3">
 			    <label for="sixth2">6th: </label>
 			    <input class="form-control" type="text" id="sixth2" name="sixth2">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-3">
+	        <div class="form-group d-flex justify-content-center col-3">
 			    <label for="seventh2">7th: </label>
 			    <input class="form-control" type="text" id="seventh2" name="seventh2">
             </div>
         </div>
         <div class="form-row">
-	        <div class="form-group d-flex justify-content-center col-xl-3">
+	        <div class="form-group d-flex justify-content-center col-3">
 			    <label for="fourth3">4th: </label>
 			    <input class="form-control" type="text" id="fourth3" name="fourth3">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-3">
+	        <div class="form-group d-flex justify-content-center col-3">
 			    <label for="fifth3">5th: </label>
 			    <input class="form-control" type="text" id="fifth3" name="fifth3">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-3">
+	        <div class="form-group d-flex justify-content-center col-3">
 			    <label for="sixth3">6th: </label>
 			    <input class="form-control" type="text" id="sixth3" name="sixth3">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-3">
+	        <div class="form-group d-flex justify-content-center col-3">
 			    <label for="seventh3">7th: </label>
 			    <input class="form-control" type="text" id="seventh3" name="seventh3">
             </div>
         </div>
         <div class="form-row">
-	        <div class="form-group d-flex justify-content-center col-xl-3">
+	        <div class="form-group d-flex justify-content-center col-3">
 			    <label for="fourth4">4th: </label>
 			    <input class="form-control" type="text" id="fourth4" name="fourth4">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-3">
+	        <div class="form-group d-flex justify-content-center col-3">
 			    <label for="fifth4">5th: </label>
 			    <input class="form-control" type="text" id="fifth4" name="fifth4">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-3">
+	        <div class="form-group d-flex justify-content-center col-3">
 			    <label for="sixth4">6th: </label>
 			    <input class="form-control" type="text" id="sixth4" name="sixth4">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-3">
+	        <div class="form-group d-flex justify-content-center col-3">
 			    <label for="seventh4">7th: </label>
 			    <input class="form-control" type="text" id="seventh4" name="seventh4">
             </div>
         </div>
         <div class="form-row">
-	        <div class="form-group d-flex justify-content-center col-xl-3">
+	        <div class="form-group d-flex justify-content-center col-3">
 			    <label for="fourth5">4th: </label>
 			    <input class="form-control" type="text" id="fourth5" name="fourth5">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-3">
+	        <div class="form-group d-flex justify-content-center col-3">
 			    <label for="fifth5">5th: </label>
 			    <input class="form-control" type="text" id="fifth5" name="fifth5">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-3">
+	        <div class="form-group d-flex justify-content-center col-3">
 			    <label for="sixth5">6th: </label>
 			    <input class="form-control" type="text" id="sixth5" name="sixth5">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-3">
+	        <div class="form-group d-flex justify-content-center col-3">
 			    <label for="seventh5">7th: </label>
 			    <input class="form-control" type="text" id="seventh5" name="seventh5">
             </div>
         </div>
         <div class="form-row">
-            <div class="col-xl-1"></div>
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+            <div class="col-1"></div>
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="eighth1">8th: </label>
 			    <input class="form-control" type="text" id="eighth1" name="eighth1">
             </div>
-            <div class="col-xl-2"></div>
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+            <div class="col-2"></div>
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="ninth1">9th: </label>
 			    <input class="form-control" type="text" id="ninth1" name="ninth1">
             </div>
-            <div class="col-xl-1"></div>
+            <div class="col-1"></div>
         </div>
         <div class="form-row">
-            <div class="col-xl-1"></div>
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+            <div class="col-1"></div>
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="eighth2">8th: </label>
 			    <input class="form-control" type="text" id="eighth2" name="eighth2">
             </div>
-            <div class="col-xl-2"></div>
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+            <div class="col-2"></div>
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="ninth2">9th: </label>
 			    <input class="form-control" type="text" id="ninth2" name="ninth2">
             </div>
-            <div class="col-xl-1"></div>
+            <div class="col-1"></div>
         </div>
         <div class="form-row">
-            <div class="col-xl-1"></div>
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+            <div class="col-1"></div>
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="eighth3">8th: </label>
 			    <input class="form-control" type="text" id="eighth3" name="eighth3">
             </div>
-            <div class="col-xl-2"></div>
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+            <div class="col-2"></div>
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="ninth3">9th: </label>
 			    <input class="form-control" type="text" id="ninth3" name="ninth3">
             </div>
-            <div class="col-xl-1"></div>
+            <div class="col-1"></div>
         </div>
         <div class="form-row">
-            <div class="col-xl-1"></div>
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+            <div class="col-1"></div>
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="eighth4">8th: </label>
 			    <input class="form-control" type="text" id="eighth4" name="eighth4">
             </div>
-            <div class="col-xl-2"></div>
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+            <div class="col-2"></div>
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="ninth4">9th: </label>
 			    <input class="form-control" type="text" id="ninth4" name="ninth4">
             </div>
-            <div class="col-xl-1"></div>
+            <div class="col-1"></div>
         </div>
         <div class="form-row">
-            <div class="col-xl-1"></div>
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+            <div class="col-1"></div>
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="eighth5">8th: </label>
 			    <input class="form-control" type="text" id="eighth5" name="eighth5">
             </div>
-            <div class="col-xl-2"></div>
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+            <div class="col-2"></div>
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="ninth5">9th: </label>
 			    <input class="form-control" type="text" id="ninth5" name="ninth5">
             </div>
-            <div class="col-xl-1"></div>
+            <div class="col-1"></div>
         </div>
         <div class="form-row">
             <div class="form-group m-auto">
@@ -518,142 +576,143 @@
                 <p class="text-center"><small>This is for your characters weapons, armor and tools list.</small></p>
             </div>
         </div>
+        <!--- This is input for all the equipment the character will have --->
         <div class="form-row">
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="weapon1">Weapon 1: </label>
 			    <input class="form-control" type="text" id="weapon1" name="weapon1">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="armor1">Armor 1: </label>
 			    <input class="form-control" type="text" id="armor1" name="armor1">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="tool1">Tool 1: </label>
 			    <input class="form-control" type="text" id="tool1" name="tool1">
             </div>
         </div>
         <div class="form-row">
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="weapon2">Weapon 2: </label>
 			    <input class="form-control" type="text" id="weapon2" name="weapon2">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="armor2">Armor 2: </label>
 			    <input class="form-control" type="text" id="armor2" name="armor2">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="tool2">Tool 2: </label>
 			    <input class="form-control" type="text" id="tool2" name="tool2">
             </div>
         </div>
         <div class="form-row">
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="weapon3">Weapon 3: </label>
 			    <input class="form-control" type="text" id="weapon3" name="weapon3">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="armor3">Armor 3: </label>
 			    <input class="form-control" type="text" id="armor3" name="armor3">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="tool3">Tool 3: </label>
 			    <input class="form-control" type="text" id="tool3" name="tool3">
             </div>
         </div>
         <div class="form-row">
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="weapon4">Weapon 4: </label>
 			    <input class="form-control" type="text" id="weapon4" name="weapon4">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="armor4">Armor 4: </label>
 			    <input class="form-control" type="text" id="armor4" name="armor4">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="tool4">Tool 4: </label>
 			    <input class="form-control" type="text" id="tool4" name="tool4">
             </div>
         </div>
         <div class="form-row">
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="weapon5">Weapon 5: </label>
 			    <input class="form-control" type="text" id="weapon5" name="weapon5">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="armor5">Armor 5: </label>
 			    <input class="form-control" type="text" id="armor5" name="armor5">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="tool5">Tool 5: </label>
 			    <input class="form-control" type="text" id="tool5" name="tool5">
             </div>
         </div>
         <div class="form-row">
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="weapon6">Weapon 6: </label>
 			    <input class="form-control" type="text" id="weapon6" name="weapon6">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="armor6">Armor 6: </label>
 			    <input class="form-control" type="text" id="armor6" name="armor6">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="tool6">Tool 6: </label>
 			    <input class="form-control" type="text" id="tool6" name="tool6">
             </div>
         </div>
         <div class="form-row">
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="weapon7">Weapon 7: </label>
 			    <input class="form-control" type="text" id="weapon7" name="weapon7">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="armor7">Armor 7: </label>
 			    <input class="form-control" type="text" id="armor7" name="armor7">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="tool7">Tool 7: </label>
 			    <input class="form-control" type="text" id="tool7" name="tool7">
             </div>
         </div>
         <div class="form-row">
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="weapon8">Weapon 8: </label>
 			    <input class="form-control" type="text" id="weapon8" name="weapon8">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="armor8">Armor 8: </label>
 			    <input class="form-control" type="text" id="armor8" name="armor8">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="tool8">Tool 8: </label>
 			    <input class="form-control" type="text" id="tool8" name="tool8">
             </div>
         </div>
         <div class="form-row">
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="weapon9">Weapon 9: </label>
 			    <input class="form-control" type="text" id="weapon9" name="weapon9">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="armor9">Armor 9: </label>
 			    <input class="form-control" type="text" id="armor9" name="armor9">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="tool9">Tool 9: </label>
 			    <input class="form-control" type="text" id="tool9" name="tool9">
             </div>
         </div>
         <div class="form-row">
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="weapon10">Weapon 10: </label>
 			    <input class="form-control" type="text" id="weapon10" name="weapon10">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="armor10">Armor 10: </label>
 			    <input class="form-control" type="text" id="armor10" name="armor10">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="tool10">Tool 10: </label>
 			    <input class="form-control" type="text" id="tool10" name="tool10">
             </div>
@@ -664,142 +723,143 @@
                 <p class="text-center"><small>This section is for character racial and class features, and this section is for feats that have been gained by the character.</small></p>
             </div>
         </div>
+        <!--- This allows input of the characters feat, class and race features the user wants --->
         <div class="form-row">
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="class_features1">Class Feature 1: </label>
 			    <input class="form-control" type="text" id="class_features1" name="class_features1">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="race_features1">Race Feature 1: </label>
 			    <input class="form-control" type="text" id="race_features1" name="race_features1">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="feats1">Feat 1: </label>
 			    <input class="form-control" type="text" id="feats1" name="feats1">
             </div>
         </div>
         <div class="form-row">
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="class_features2">Class Feature 2: </label>
 			    <input class="form-control" type="text" id="class_features2" name="class_features2">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="race_features2">Race Feature 2: </label>
 			    <input class="form-control" type="text" id="race_features2" name="race_features2">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="feats2">Feat 2: </label>
 			    <input class="form-control" type="text" id="feats2" name="feats2">
             </div>
         </div>
         <div class="form-row">
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="class_features3">Class Feature 3: </label>
 			    <input class="form-control" type="text" id="class_features3" name="class_features3">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="race_features3">Race Feature 3: </label>
 			    <input class="form-control" type="text" id="race_features3" name="race_features3">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="feats3">Feat 3: </label>
 			    <input class="form-control" type="text" id="feats3" name="feats3">
             </div>
         </div>
         <div class="form-row">
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="class_features4">Class Feature 4: </label>
 			    <input class="form-control" type="text" id="class_features4" name="class_features4">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="race_features4">Race Feature 4: </label>
 			    <input class="form-control" type="text" id="race_features4" name="race_features4">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="feats4">Feat 4: </label>
 			    <input class="form-control" type="text" id="feats4" name="feats4">
             </div>
         </div>
         <div class="form-row">
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="class_features5">Class Feature 5: </label>
 			    <input class="form-control" type="text" id="class_features5" name="class_features5">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="race_features5">Race Feature 5: </label>
 			    <input class="form-control" type="text" id="race_features5" name="race_features5">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="feats5">Feat 5: </label>
 			    <input class="form-control" type="text" id="feats5" name="feats5">
             </div>
         </div>
         <div class="form-row">
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="class_features6">Class Feature 6: </label>
 			    <input class="form-control" type="text" id="class_features6" name="class_features6">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="race_features6">Race Feature 6: </label>
 			    <input class="form-control" type="text" id="race_features6" name="race_features6">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="feats6">Feat 6: </label>
 			    <input class="form-control" type="text" id="feats6" name="feats6">
             </div>
         </div>
         <div class="form-row">
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="class_features7">Class Feature 7: </label>
 			    <input class="form-control" type="text" id="class_features7" name="class_features7">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="race_features7">Race Feature 7: </label>
 			    <input class="form-control" type="text" id="race_features7" name="race_features7">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="feats7">Feat 7: </label>
 			    <input class="form-control" type="text" id="feats7" name="feats7">
             </div>
         </div>
         <div class="form-row">
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="class_features8">Class Feature 8: </label>
 			    <input class="form-control" type="text" id="class_features8" name="class_features8">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="race_features8">Race Feature 8: </label>
 			    <input class="form-control" type="text" id="race_features8" name="race_features8">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="feats8">Feat 8: </label>
 			    <input class="form-control" type="text" id="feats8" name="feats8">
             </div>
         </div>
         <div class="form-row">
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="class_features9">Class Feature 9: </label>
 			    <input class="form-control" type="text" id="class_features9" name="class_features9">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="race_features9">Race Feature 9: </label>
 			    <input class="form-control" type="text" id="race_features9" name="race_features9">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="feats9">Feat 9: </label>
 			    <input class="form-control" type="text" id="feats9" name="feats9">
             </div>
         </div>
         <div class="form-row">
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="class_features10">Class Feature 10: </label>
 			    <input class="form-control" type="text" id="class_features10" name="class_features10">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="race_features10">Race Feature 10: </label>
 			    <input class="form-control" type="text" id="race_features10" name="race_features10">
             </div>
-	        <div class="form-group d-flex justify-content-center col-xl-4">
+	        <div class="form-group d-flex justify-content-center col-4">
 			    <label for="feats10">Feat 10: </label>
 			    <input class="form-control" type="text" id="feats10" name="feats10">
             </div>

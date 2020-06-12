@@ -2,15 +2,20 @@
 <html>
 
 <head>
+    <!--- This allows all pages that link to the base.html page 
+    to have Bootstrap used in them --->
 	{% block head %}
 	<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet"
 		integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <!--- This allows specific title for the different page --->
 	<title>{% block title %}{%  endblock %}</title>
 	{% endblock %}
 </head>
 
 <body>
 	<div id="content">{% block content %}{% endblock %}</div>
+    <!--- This allows the pages to have JQuery,
+    which is mainly used for the navigation --->
     {% block footer %}
 	<script src="https://code.jquery.com/jquery-3.5.1.slim.js"
 		integrity="sha256-DrT5NfxfbHvMHux31Lkhxg42LY6of8TaYyK50jnxRnM=" crossorigin="anonymous"></script>

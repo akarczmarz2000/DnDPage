@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}Welcome {{name}}!{% endblock %}
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<script src="{{url_for('static', filename='sidenav.js')}}"></script>
+{% endblock %}
+{% block content %}
+<!--- This allows the navigation link 
+to take the user back to the top of the page --->
+<div id="top"></div>
+<!--- This is the side navigation,
+it is hidden by javascript and css.
+Until the open button is pressed. --->
+<div id="mySidenav" class="sidenav">
+  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+  <a href="{{ url_for('new_character', name=name) }}">New Character</a>
+  <a href="{{ url_for('character_url', name=name) }}">Characters</a>
+  <a href="{{ url_for('update', name=name) }}">Update</a>
+  <a class="active" href="#">Delete</a>
+    <ul>
+        <li><a href="#top">Top</a></li>  
+        <!--- This creates a link for each character
+        that is found when finding the users characters. 
+        Then when displaying
+        the characters a div with corrisponding char_id as the 
+        divs id is created allowing users to jump to that 
+        characters sheet through the navigation--->      
+        {% for urls in url %}
+        <li><a href="#{{urls.char_id}}">{{urls.character_name}}</a></li>
+        {% endfor %}
+    </ul>
+</div>
+<button id="openbtn" class="m-1 pt-1 sticky-top" onclick="openNav()">Open</button>
+<div id="main">
+<div class="row m-1">
+	<h1 class="m-auto text-center">Welcome! - Delete unwanted character</h1>
+</div>
+<div class="row m-1">
+    <p class="m-auto text-center">Select the character you want to delete the character name and character number is displayed to help pick the correct character.</p>
+</div>
+<!--- This displays the characters
+that are returned from the find method 
+in a simplified character sheet format  --->
+{% for chars in char %}
+    <div id="{{chars.char_id}}"></div>
+	<form action="{{ url_for('delete', name=name) }}" name="character" method="post" class="m-1">
+    <div class="form-row m-1 m-1">
+        <div class="form-group col-3">
+            <!--- This is displayed to help them select the correct character and isn't changable as its here to pass the infomation the the app.py --->
+            <label for="id">Character Id:</label>
+            <input type="text" class="form-control" id="char_id" name="char_id" readonly value="{{chars.char_id}}">
+        </div>
+        <div class="form-group col-3">
+            <!--- This is displayed to help them select the correct character and isn't changable as its here to pass the infomation the the app.py --->
+			<label for="username">Users Name:</label>
+			<input type="text" class="form-control" id="username" name="username" readonly value="{{chars.user}}">
+        </div>
+        <div class="form-group col-3">
+            <!--- This is displayed to help them select the correct character and isn't changable as its here to pass the infomation the the app.py --->
+			<label for="char_numb">Character Number:</label>
+			<input type="text" class="form-control" id="char_numb" name="char_numb" readonly value="{{chars.char_numb}}">
+        </div>
+        <div class="form-group col-3">
+            <!--- This is displayed to help them select the correct character and isn't changable as its here to pass the infomation the the app.py --->
+			<label for="character_name">Character Name:</label>
+			<input type="text" class="form-control" id="character_name" name="character_name" readonly value="{{chars.character_name}}">
+        </div>
+        <div class="form-group col-4"></div>
+        <div class="form-group col-4">
+            <div class="d-flex justify-content-center">
+                <input type="submit" value="Delete">
+            </div>
+        </div>
+        <div class="form-group col-4"></div>
+        </div>
+	</form>
+
+{% endfor %}
+{% endblock %}
